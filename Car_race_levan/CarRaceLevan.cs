@@ -16,6 +16,8 @@ namespace Car_race_levan
         Texture2D car;
         Vector2 carPosition;
         float carSpeed;
+        float carAnlge;
+        float carRotationSpeed;
 
         public CarRaceLevan()
         {
@@ -39,8 +41,11 @@ namespace Car_race_levan
                 graphics.PreferredBackBufferHeight / 2
                 );
 
-            // The speed of the Car :)
+
             carSpeed = 300f;
+            carAnlge = 1f;
+            carRotationSpeed = 0.05f;
+
 
             base.Initialize();
         }
@@ -87,17 +92,26 @@ namespace Car_race_levan
             // update the position whnen key pressed
 
             if (kstate.IsKeyDown(Keys.Up))
+            {
                 carPosition.Y -= carSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
             if (kstate.IsKeyDown(Keys.Down))
+            {
                 carPosition.Y += carSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
             if (kstate.IsKeyDown(Keys.Left))
-                carPosition.X -= carSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            {
+                carAnlge -= carRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+            }
 
 
             if (kstate.IsKeyDown(Keys.Right))
-                carPosition.X += carSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            {
+                carAnlge += carRotationSpeed;
+            }
+
 
             //CarPosition.X = Math.Min(Math.Max(ballTexture.Width / 2, ballPosition.X), graphics.PreferredBackBufferWidth - ballTexture.Width / 2);
             //CarPosition.Y = Math.Min(Math.Max(ballTexture.Height / 2, ballPosition.Y), graphics.PreferredBackBufferHeight - ballTexture.Height / 2);
@@ -124,7 +138,8 @@ namespace Car_race_levan
 
             Vector2 origin = new Vector2(car.Width / 2, car.Height / 2);
 
-            spriteBatch.Draw(car, carPosition, null, Color.White, .0f, origin, 0.2f, SpriteEffects.None, 0f);
+
+            spriteBatch.Draw(car, carPosition, null, Color.White, carAnlge, origin, 0.2f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
 
