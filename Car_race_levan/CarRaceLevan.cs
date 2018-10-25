@@ -15,6 +15,7 @@ namespace Car_race_levan
 
         Texture2D car;
         Vector2 carPosition;
+        Vector2 direction;
         float carSpeed;
         float carAnlge;
         float carRotationSpeed;
@@ -43,9 +44,9 @@ namespace Car_race_levan
 
 
             carSpeed = 300f;
-            carAnlge = 1f;
+            carAnlge = 0.0f;
             carRotationSpeed = 0.05f;
-
+            
 
             base.Initialize();
         }
@@ -93,12 +94,14 @@ namespace Car_race_levan
 
             if (kstate.IsKeyDown(Keys.Up))
             {
-                carPosition.Y -= carSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                direction = new Vector2((float)Math.Cos(carAnlge), (float)Math.Sin(carAnlge));
+                carPosition -= direction * 5;
             }
 
             if (kstate.IsKeyDown(Keys.Down))
             {
-                carPosition.Y += carSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                direction = new Vector2((float)Math.Cos(carAnlge), (float)Math.Sin(carAnlge));
+                carPosition += direction * 5;
             }
 
             if (kstate.IsKeyDown(Keys.Left))
