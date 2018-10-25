@@ -35,7 +35,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:auto_Cabrio.png
+/build:auto_Cabrio.png;auto_cabrio.png
 
 #begin auto_white.jpg
 /importer:TextureImporter
