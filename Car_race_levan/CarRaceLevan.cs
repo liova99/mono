@@ -10,20 +10,32 @@ namespace Car_race_levan
     /// </summary>
     public class CarRaceLevan : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        // GraphicsDeviceManager graphics;
 
-        Texture2D car;
-        Vector2 carPosition;
-        Vector2 direction;
-        float carSpeed;
-        float carAnlge;
-        float carRotationSpeed;
+        //SpriteBatch spriteBatch;
+
+        
+        SpriteBatch spriteBatch;
+        GraphicsDeviceManager graphics;
+
+
+        Car cabrio = new Car();
+        Vector2 cabrioPosition;
+
+        Car blueCar = new Car();
+        Vector2 blueCarPosition;
+
+        
+
+
+
 
         public CarRaceLevan()
         {
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -35,21 +47,16 @@ namespace Car_race_levan
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            cabrioPosition = cabrio.CarPosition;
+            blueCarPosition = blueCar.CarPosition;
 
-            // Initial position: Center
-            carPosition = new Vector2(
-                graphics.PreferredBackBufferWidth / 2,
-                graphics.PreferredBackBufferHeight / 2
-                );
-
-
-            carSpeed = 300f;
-            carAnlge = 0.0f;
-            carRotationSpeed = 0.05f;
-            
 
             base.Initialize();
         }
+
+        
+
+        
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -63,7 +70,10 @@ namespace Car_race_levan
             // TODO: use this.Content to load your game content here
 
             // Load the car <texture2D oder 3D> ("name_of_the_file")
-            car = Content.Load<Texture2D>("auto_cabrio");
+
+            cabrio.CarTexture = Content.Load<Texture2D>("auto_cabrio");
+            blueCar.CarTexture = Content.Load<Texture2D>("auto_blue");
+
         }
 
         /// <summary>
@@ -94,34 +104,29 @@ namespace Car_race_levan
 
             if (kstate.IsKeyDown(Keys.Up))
             {
-                direction = new Vector2((float)Math.Cos(carAnlge), (float)Math.Sin(carAnlge));
-                carPosition -= direction * 5;
+                cabrio.MoveForward();
+                cabrioPosition = cabrio.CarPosition;
             }
 
             if (kstate.IsKeyDown(Keys.Down))
             {
-                direction = new Vector2((float)Math.Cos(carAnlge), (float)Math.Sin(carAnlge));
-                carPosition += direction * 5;
+                cabrio.MoveBackwards();
+                cabrioPosition = cabrio.CarPosition;
+
             }
 
             if (kstate.IsKeyDown(Keys.Left))
             {
-                carAnlge -= carRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+                cabrio.CarAngle -= cabrio.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
             }
 
 
             if (kstate.IsKeyDown(Keys.Right))
             {
-                carAnlge += carRotationSpeed;
+                cabrio.CarAngle += cabrio.CarRotationSpeed;
             }
 
-
-            //CarPosition.X = Math.Min(Math.Max(ballTexture.Width / 2, ballPosition.X), graphics.PreferredBackBufferWidth - ballTexture.Width / 2);
-            //CarPosition.Y = Math.Min(Math.Max(ballTexture.Height / 2, ballPosition.Y), graphics.PreferredBackBufferHeight - ballTexture.Height / 2);
-
-            // the division dependent on the scale of the DrawModel, wenn scale 1, then devide with 2
-            carPosition.X = Math.Min(Math.Max(car.Width / 10, carPosition.X), graphics.PreferredBackBufferWidth - car.Width / 10);
-            carPosition.Y = Math.Min(Math.Max(car.Height / 10, carPosition.Y), graphics.PreferredBackBufferHeight - car.Height / 10);
+            cabrio.DefineBorders();
 
             base.Update(gameTime);
         }
@@ -139,10 +144,12 @@ namespace Car_race_levan
             //Draw the car
             spriteBatch.Begin();
 
-            Vector2 origin = new Vector2(car.Width / 2, car.Height / 2);
+            // == Cabrio==
+            Vector2 cabrioOrigin = new Vector2(cabrio.CarTexture.Width / 2, cabrio.CarTexture.Height / 2);
+
+            spriteBatch.Draw(cabrio.CarTexture, cabrioPosition, null, Color.White, cabrio.CarAngle, cabrioOrigin, 0.2f, SpriteEffects.None, 0f);
 
 
-            spriteBatch.Draw(car, carPosition, null, Color.White, carAnlge, origin, 0.2f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
 
