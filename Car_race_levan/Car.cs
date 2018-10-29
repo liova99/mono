@@ -21,7 +21,12 @@ namespace Car_race_levan
 
         public Car()
         {
+            
+
             _graphics = new GraphicsDeviceManager(this);
+
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
             CarPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                                       _graphics.PreferredBackBufferHeight / 2
@@ -53,7 +58,7 @@ namespace Car_race_levan
         public void MoveForward()
         {
             CarDirection();
-            CarPosition -= Direction * 5;
+            CarPosition -= Direction * 7;
 
         }
 
@@ -64,7 +69,7 @@ namespace Car_race_levan
         public Vector2 MoveBackwards()
         {
             CarDirection();
-            return CarPosition += Direction * 5;
+            return CarPosition += Direction * 1;
         }
 
 
@@ -75,8 +80,8 @@ namespace Car_race_levan
         /// </summary>
         public void DefineBorders()
         {
-            _carPosition.X = Math.Min(Math.Max(CarTexture.Width / 10, _carPosition.X), _graphics.PreferredBackBufferWidth - CarTexture.Width / 10);
-            _carPosition.Y = Math.Min(Math.Max(CarTexture.Height / 10, _carPosition.Y), _graphics.PreferredBackBufferHeight - CarTexture.Height / 10);
+            _carPosition.X = Math.Min(Math.Max(CarTexture.Width / 3, _carPosition.X), _graphics.PreferredBackBufferWidth - CarTexture.Width / 3);
+            _carPosition.Y = Math.Min(Math.Max(CarTexture.Height / 3, _carPosition.Y), _graphics.PreferredBackBufferHeight - CarTexture.Height/ 3);
         }
 
         // == END Methods ===========================
