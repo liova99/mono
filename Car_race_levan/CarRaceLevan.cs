@@ -10,14 +10,11 @@ namespace Car_race_levan
     /// </summary>
     public class CarRaceLevan : Game
     {
-        // GraphicsDeviceManager graphics;
-
-        //SpriteBatch spriteBatch;
-
-        
+       
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
 
+       // KeyboardInteraction keyboardInteraction = new KeyboardInteraction();
 
         Car cabrio = new Car();
         Vector2 cabrioPosition;
@@ -25,7 +22,7 @@ namespace Car_race_levan
         Car blueCar = new Car();
         Vector2 blueCarPosition;
 
-        
+
 
 
 
@@ -106,6 +103,7 @@ namespace Car_race_levan
             {
                 cabrio.MoveForward();
                 cabrioPosition = cabrio.CarPosition;
+
             }
 
             if (kstate.IsKeyDown(Keys.Down))
@@ -126,7 +124,36 @@ namespace Car_race_levan
                 cabrio.CarAngle += cabrio.CarRotationSpeed;
             }
 
+            if (kstate.IsKeyDown(Keys.W))
+            {
+                blueCar.MoveForward();
+                blueCarPosition = blueCar.CarPosition;
+
+            }
+
+            if (kstate.IsKeyDown(Keys.S))
+            {
+                blueCar.MoveBackwards();
+                blueCarPosition = blueCar.CarPosition;
+
+            }
+
+            if (kstate.IsKeyDown(Keys.A))
+            {
+                blueCar.CarAngle -= blueCar.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+            }
+
+
+            if (kstate.IsKeyDown(Keys.D))
+            {
+                blueCar.CarAngle += blueCar.CarRotationSpeed;
+            }
+
+
+            blueCar.DefineBorders();
             cabrio.DefineBorders();
+
+            //keyboardInteraction.PressedKey();
 
             base.Update(gameTime);
         }
@@ -148,6 +175,11 @@ namespace Car_race_levan
             Vector2 cabrioOrigin = new Vector2(cabrio.CarTexture.Width / 2, cabrio.CarTexture.Height / 2);
 
             spriteBatch.Draw(cabrio.CarTexture, cabrioPosition, null, Color.White, cabrio.CarAngle, cabrioOrigin, 0.2f, SpriteEffects.None, 0f);
+
+            // == Blue Car==
+            Vector2 blueCarOrigin = new Vector2(blueCar.CarTexture.Width / 2, blueCar.CarTexture.Height / 2);
+
+            spriteBatch.Draw(blueCar.CarTexture, blueCarPosition, null, Color.White, blueCar.CarAngle, blueCarOrigin, 0.2f, SpriteEffects.None, 0f);
 
 
 
