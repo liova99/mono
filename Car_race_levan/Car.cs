@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,28 +17,30 @@ namespace Car_race_levan
         private Vector2 _carPosition;
         private Vector2 _direction;
         private float _carSpeed;
+        private float _carSpeedBackwards;
         private float _carAngle;
         private float _carRotationSpeed;
 
         public Car()
         {
-            
+
 
             _graphics = new GraphicsDeviceManager(this);
 
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            CarPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
+            _carPosition = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                                       _graphics.PreferredBackBufferHeight / 2
                                      );
 
 
             //Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
-            CarTexture = _car;
-            CarSpeed = 300f;
-            CarAngle = 0.00f;
-            CarRotationSpeed = 0.05f;
+            //CarTexture = _car;
+            _carSpeed = 0f;
+            _carSpeedBackwards = 0f;
+            _carAngle = 0.00f;
+            _carRotationSpeed = 0.05f;
         }
 
         // == Methods ===========================
@@ -51,26 +54,55 @@ namespace Car_race_levan
             return Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
         }
 
-        /// <summary>
-        /// Move the car 5 pixels forwards
-        /// </summary>
-        /// <returns>New car Position</returns>
-        public void MoveForward()
+        public void SetCarRotationSpeed()
         {
-            CarDirection();
-            CarPosition -= Direction * 7;
 
         }
 
         /// <summary>
-        /// Move the car 5 pixels backwards 
+        /// Move the car 'x' pixels forwards.
+        /// So x is the carSpeed
         /// </summary>
         /// <returns>New car Position</returns>
-        public Vector2 MoveBackwards()
+        public void MoveForward(float carSpeed)
         {
             CarDirection();
-            return CarPosition += Direction * 1;
+            CarPosition -= Direction * carSpeed;
+
         }
+        public void SlideForward(float carSpeed)
+        {
+
+            CarDirection();
+            CarPosition -= Direction * carSpeed;
+        }
+
+
+        /// <summary>
+        /// Move the car x pixels backwards.
+        /// </summary>
+        /// <returns>New car Position</returns>
+        public void MoveBackwards(float carSpeedBackwards)
+        {
+            CarDirection();
+            CarPosition += Direction * CarSpeedBackwards;
+            
+        }
+        /// <summary>
+        /// slide the car a litel bit Backwards,
+        /// if stop pushing the Backwards button
+        /// </summary>
+        /// <param name="speed of the Car"></param>
+        public void SlideBackwards(float carSpeedBackwards)
+        {
+
+            CarDirection();
+            CarPosition += Direction * carSpeedBackwards;
+        }
+
+
+
+
 
 
         // TODO: maby DefineBordes  method don't belong to the car Class?? 
@@ -81,7 +113,7 @@ namespace Car_race_levan
         public void DefineBorders()
         {
             _carPosition.X = Math.Min(Math.Max(CarTexture.Width / 3, _carPosition.X), _graphics.PreferredBackBufferWidth - CarTexture.Width / 3);
-            _carPosition.Y = Math.Min(Math.Max(CarTexture.Height / 3, _carPosition.Y), _graphics.PreferredBackBufferHeight - CarTexture.Height/ 3);
+            _carPosition.Y = Math.Min(Math.Max(CarTexture.Height / 3, _carPosition.Y), _graphics.PreferredBackBufferHeight - CarTexture.Height / 3);
         }
 
         // == END Methods ===========================
@@ -115,6 +147,17 @@ namespace Car_race_levan
             {
                 _carSpeed = value;
             }
+        }
+
+        public float CarSpeedBackwards
+        {
+            get => _carSpeedBackwards;
+            set
+            {
+                _carSpeedBackwards = value;
+            }
+
+
         }
 
         public float CarAngle

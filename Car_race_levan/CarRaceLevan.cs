@@ -10,23 +10,30 @@ namespace Car_race_levan
     /// </summary>
     public class CarRaceLevan : Game
     {
-       
+
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
+        KeyboardState previousState;
+
+
 
         Track track = new Track();
 
-       // KeyboardInteraction keyboardInteraction = new KeyboardInteraction();
+        // KeyboardInteraction keyboardInteraction = new KeyboardInteraction();
 
+
+        // === Carbrio properties == 
         Car cabrio = new Car();
         Vector2 cabrioPosition;
+        float maxCabrioSpeed;
+        float maxcabrioSpeedBackwards;
 
+        // === Blue Car properties == 
         Car blueCar = new Car();
         Vector2 blueCarPosition;
-
-
-
-
+        float maxBlueCarSpeed;
+        float maxBlueCarSpeedBackwards;
+        
 
 
         public CarRaceLevan()
@@ -48,24 +55,36 @@ namespace Car_race_levan
 
             // TODO: Add your initialization logic 
 
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            // get which key was pressed last time
+            previousState = Keyboard.GetState();
+
+            //graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             //graphics.IsFullScreen = true;
+
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
 
             // graphics.ToggleFullScreen(); 
             graphics.ApplyChanges();
 
 
+            // ==== Cabrio Initialize====
             cabrioPosition = cabrio.CarPosition;
-            blueCarPosition = blueCar.CarPosition;
+            maxCabrioSpeed = 12f;
+            maxcabrioSpeedBackwards = 5f;
 
+            // ==== BlueCar Initialize====
+            blueCarPosition = blueCar.CarPosition;
+            maxBlueCarSpeed = 15f;
+            maxBlueCarSpeedBackwards = 5f;
 
             base.Initialize();
         }
 
-        
 
-        
+
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -114,52 +133,127 @@ namespace Car_race_levan
 
             if (kstate.IsKeyDown(Keys.Up))
             {
-                cabrio.MoveForward();
+                cabrio.MoveForward(cabrio.CarSpeed);
                 cabrioPosition = cabrio.CarPosition;
+                if (cabrio.CarSpeed <= maxCabrioSpeed)
+                {
+                    cabrio.CarSpeed += 0.1f;
+                }
+
+
+            }
+            // slide the car a litel bit forward, if stop pushing the forward button
+            if (kstate.IsKeyUp(Keys.Up) & cabrio.CarSpeed > 0) // previousState.IsKeyDown(Keys.Up)
+            {
+                cabrio.SlideForward(cabrio.CarSpeed);
+                cabrioPosition = cabrio.CarPosition;
+                cabrio.CarSpeed -= 0.1f;
 
             }
 
             if (kstate.IsKeyDown(Keys.Down))
             {
-                cabrio.MoveBackwards();
-                cabrioPosition = cabrio.CarPosition;
+                // break the car to still 
+                if (cabrio.CarSpeed > 0)
+                {
+                    cabrio.CarSpeed -= 0.2f;
+                }
+                // then go backwards, speed add up 0.1 (pixel) until max speed 
+                else if (cabrio.CarSpeedBackwards < maxcabrioSpeedBackwards)
+                {
+                    cabrio.CarSpeedBackwards += 0.1f;
 
+                }
+
+                cabrio.MoveBackwards(cabrio.CarSpeedBackwards);
+                cabrioPosition = cabrio.CarPosition;
+            }
+            // slide the car a litel bit Backwards, if stop pushing the Backwards button
+            if (kstate.IsKeyUp(Keys.Down) & cabrio.CarSpeedBackwards > 0)
+            {
+                cabrio.SlideBackwards(cabrio.CarSpeedBackwards);
+                cabrioPosition = cabrio.CarPosition;
+                cabrio.CarSpeedBackwards -= 0.1f;
             }
 
             if (kstate.IsKeyDown(Keys.Left))
             {
-                cabrio.CarAngle -= cabrio.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+                if (cabrio.CarSpeed > 0)
+                {
+                    cabrio.CarAngle -= cabrio.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+                }
             }
-
-
+            
             if (kstate.IsKeyDown(Keys.Right))
             {
-                cabrio.CarAngle += cabrio.CarRotationSpeed;
+                if (cabrio.CarSpeed > 0)
+                {
+                    cabrio.CarAngle += cabrio.CarRotationSpeed;
+                }
             }
-
+            
             if (kstate.IsKeyDown(Keys.W))
             {
-                blueCar.MoveForward();
-                blueCarPosition = blueCar.CarPosition;
 
+                blueCar.MoveForward(blueCar.CarSpeed);
+                blueCarPosition = blueCar.CarPosition;
+                if (blueCar.CarSpeed <= maxBlueCarSpeed)
+                {
+                    blueCar.CarSpeed += 0.15f;
+                }
+
+            }
+            // slide the car a litel bit, if stop pushing the forward button
+            if (kstate.IsKeyUp(Keys.W) & blueCar.CarSpeed > 0)
+            {
+                blueCar.SlideForward(blueCar.CarSpeed);
+                blueCarPosition = blueCar.CarPosition;
+                blueCar.CarSpeed -= 0.1f;
             }
 
             if (kstate.IsKeyDown(Keys.S))
             {
-                blueCar.MoveBackwards();
-                blueCarPosition = blueCar.CarPosition;
+                // break the car to still 
+                if(blueCar.CarSpeed > 0 )
+                {
+                    blueCar.CarSpeed -= 0.2f;
+                }
+                // then go backwards, speed add up 0.1 (pixel) until max speed 
+                else if (blueCar.CarSpeedBackwards < maxBlueCarSpeedBackwards)
+                {
+                    blueCar.CarSpeedBackwards += 0.1f;
+             
+                }
 
+                blueCar.MoveBackwards(blueCar.CarSpeedBackwards);
+                blueCarPosition = blueCar.CarPosition;
+            }
+
+            // slide the car a litel bit Backwards, if stop pushing the Backwards button
+            if (kstate.IsKeyUp(Keys.S) & blueCar.CarSpeedBackwards > 0)
+            {
+                blueCar.SlideBackwards(blueCar.CarSpeedBackwards);
+                blueCarPosition = blueCar.CarPosition;
+                blueCar.CarSpeedBackwards -= 0.1f;
             }
 
             if (kstate.IsKeyDown(Keys.A))
             {
-                blueCar.CarAngle -= blueCar.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+                if (blueCar.CarSpeed > 0)
+                {
+                    blueCar.CarAngle -= blueCar.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
+
+                }
             }
 
 
             if (kstate.IsKeyDown(Keys.D))
             {
-                blueCar.CarAngle += blueCar.CarRotationSpeed;
+                if (blueCar.CarSpeed > 0)
+                {
+                    blueCar.CarAngle += blueCar.CarRotationSpeed;
+
+                }
             }
 
 
@@ -168,7 +262,12 @@ namespace Car_race_levan
 
             //keyboardInteraction.PressedKey();
 
+            Console.WriteLine(cabrio.CarSpeed);
+            Console.WriteLine(blueCar.CarSpeedBackwards);
+
             base.Update(gameTime);
+
+            previousState = kstate;
         }
 
         /// <summary>
