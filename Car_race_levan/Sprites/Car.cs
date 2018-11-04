@@ -278,6 +278,7 @@ namespace Car_race_levan
 
         }
 
+
         // TODO: add default position for the cars
         // ex. cabrio at start position 1 
         /// <summary>
@@ -295,6 +296,7 @@ namespace Car_race_levan
 
             spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
 
+            Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
         }
 
 

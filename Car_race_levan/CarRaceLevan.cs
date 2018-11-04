@@ -14,7 +14,7 @@ namespace Car_race_levan
 
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
-        KeyboardState previousState;
+        //KeyboardState previousState;
 
         // Screen Parameters
         private int screenWidth;
@@ -120,9 +120,21 @@ namespace Car_race_levan
             // Exit if escape key will pressed 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)){ Exit(); }
 
+            Rectangle carRectangle = new Rectangle((int)cabrio.CarPosition.X, (int)cabrio.CarPosition.Y, cabrio.CarTexture.Width /5, cabrio.CarTexture.Height/2);
+            Rectangle carRectangle2 = new Rectangle((int)blueCar.CarPosition.X, (int)blueCar.CarPosition.Y, blueCar.CarTexture.Width/5, blueCar.CarTexture.Height/2);
+
+            if (carRectangle.Intersects(carRectangle2))
+            {
+                cabrio.CarSpeed = 0;
+                blueCar.CarSpeed = 0;
+            }
             cabrio.Update(cabrio, 7, 3);
             blueCar.Update(blueCar, 7, 3);
+            
 
+           
+
+            // DEBUG
             Console.WriteLine("Cabrio, Position {0}, Angle {1} Direction {2}", cabrio.CarPosition, cabrio.CarAngle, cabrio.Direction);
             //Console.WriteLine("Blue, Position {0}, Angle {1}, direction {2}" , blueCar.CarPosition, blueCar.CarAngle, blueCar.Direction);
 
@@ -134,7 +146,7 @@ namespace Car_race_levan
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Green);
 
             // TODO: Add your drawing code here
 
@@ -148,6 +160,9 @@ namespace Car_race_levan
             // == Cars ==
 
             cabrio.Draw(spriteBatch, cabrio);
+
+            
+
             blueCar.Draw(spriteBatch, blueCar);
 
 
