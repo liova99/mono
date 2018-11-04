@@ -61,7 +61,7 @@
 /processorParam:TextureFormat=Color
 /build:track.jpg
 
-#begin track_big.jpg
+#begin track_big.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,7 +71,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:track_big.jpg
+/build:track_big.png
 
 #begin white.png
 /importer:TextureImporter
