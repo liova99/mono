@@ -23,6 +23,7 @@ namespace Car_race_levan
         private float _carSpeedBackwards;
         private float _carAngle;
         private float _carRotationSpeed;
+        private Rectangle _carReckangle;
         public bool IsDrifting;
         private float wheelBase; // the distance between the two axes
 
@@ -52,6 +53,8 @@ namespace Car_race_levan
 
             //Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
             //CarTexture = _car;
+            //_carReckangle = new Rectangle((int)CarPosition.X, (int)CarPosition.Y, CarTexture.Width /5, CarTexture.Height/2);
+
             _carSpeed = 0f;
             _maxCarSpeed = 0f;
             _carSpeedBackwards = 0f;
@@ -290,13 +293,17 @@ namespace Car_race_levan
         public void Draw(SpriteBatch spriteBatch, Car car)
         {
             Vector2 origin = new Vector2(car.CarTexture.Width / 2, car.CarTexture.Height / 2);
-           // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
+            // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
 
             //spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
+            // Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
+            Rectangle carRectangle = new Rectangle(0,0, car.CarTexture.Width, car.CarTexture.Height);
+                       
 
-            spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(car.CarTexture, CarPosition, carRectangle, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
 
-            Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
+            
+            
         }
 
 

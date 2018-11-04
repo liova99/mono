@@ -33,8 +33,9 @@ namespace Car_race_levan
         //float maxBlueCarSpeed;
         //float maxBlueCarSpeedBackwards;
 
-
-
+        // TODO: Delete:
+        Texture2D groundTexture;
+        private Vector2 _carVelocity;
 
         public CarRaceLevan()
         {
@@ -75,10 +76,18 @@ namespace Car_race_levan
             cabrio.Input = new Input() { Up = Keys.Up, Down = Keys.Down, Left = Keys.Left, Right = Keys.Right };
             blueCar.Input = new Input() { Up = Keys.W, Down = Keys.S, Left = Keys.A, Right = Keys.D };
 
+           
+
 
             base.Initialize();
         }
 
+        //public Color[,] TextureToA2DArray (Texture2D texture)
+        //{
+        //    Color[] colors1D = new Color[texture.Width * texture.Height];
+        //    texture.GetData(colors1D);
+
+        //}
 
 
 
@@ -98,6 +107,9 @@ namespace Car_race_levan
             cabrio.CarTexture = Content.Load<Texture2D>("cabrio");
             blueCar.CarTexture = Content.Load<Texture2D>("blue");
             easyTrack.TrackTexture = Content.Load<Texture2D>("track_big");
+
+            // colorColision
+            _carVelocity = new Vector2(0, 0);
 
         }
 
@@ -120,19 +132,32 @@ namespace Car_race_levan
             // Exit if escape key will pressed 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)){ Exit(); }
 
-            Rectangle carRectangle = new Rectangle((int)cabrio.CarPosition.X, (int)cabrio.CarPosition.Y, cabrio.CarTexture.Width /5, cabrio.CarTexture.Height/2);
-            Rectangle carRectangle2 = new Rectangle((int)blueCar.CarPosition.X, (int)blueCar.CarPosition.Y, blueCar.CarTexture.Width/5, blueCar.CarTexture.Height/2);
+            Rectangle cabrioRectangle = new Rectangle((int)cabrio.CarPosition.X, (int)cabrio.CarPosition.Y, cabrio.CarTexture.Width /5, cabrio.CarTexture.Height/2);
+            //Rectangle carRectangle2 = new Rectangle((int)blueCar.CarPosition.X, (int)blueCar.CarPosition.Y, blueCar.CarTexture.Width/5, blueCar.CarTexture.Height/2);
 
-            if (carRectangle.Intersects(carRectangle2))
+            //if (carRectangle.Intersects(carRectangle2))
+            //{
+            //    cabrio.CarSpeed = 0;
+            //    blueCar.CarSpeed = 0;
+            //}
+
+            int carPixels = cabrio.CarTexture.Width * cabrio.CarTexture.Height;
+           
+
+            Color[] myColors = new Color[carPixels];
+
+            if(!ColorCollision.CarIsOnRoad(cabrio.CarPosition + _carVelocity, cabrio.CarTexture, easyTrack.TrackTexture))
             {
                 cabrio.CarSpeed = 0;
-                blueCar.CarSpeed = 0;
             }
+            
+            
             cabrio.Update(cabrio, 7, 3);
             blueCar.Update(blueCar, 7, 3);
-            
 
-           
+            //GetData<Color>
+
+
 
             // DEBUG
             Console.WriteLine("Cabrio, Position {0}, Angle {1} Direction {2}", cabrio.CarPosition, cabrio.CarAngle, cabrio.Direction);

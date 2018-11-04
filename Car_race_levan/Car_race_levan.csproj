@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ColorCollision.cs" />
     <Compile Include="Sprites\Car.cs" />
     <Compile Include="CarRaceLevan.cs" />
     <Compile Include="Models\Input.cs" />
