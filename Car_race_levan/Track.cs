@@ -13,7 +13,6 @@ namespace Car_race_levan
 
     class Track
     {
-        public GraphicsDeviceManager Graphics;
         public Texture2D TrackTexture;
 
         public Track()
