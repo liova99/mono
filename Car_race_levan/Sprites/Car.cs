@@ -24,11 +24,14 @@ namespace Car_race_levan
         private float _carAngle;
         private float _carRotationSpeed;
         public bool IsDrifting;
-        private float wheelBase; // the distance between the two axes
+        //private float wheelBase; // the distance between the two axes
+        public Color[] SurfaceColor;
 
         private int screenWidth;
         private int ScreenHeigh;
         public Input Input;
+
+        public long LongColor;
 
         public Car()
         {
@@ -44,8 +47,8 @@ namespace Car_race_levan
             ScreenHeigh = 768;
 
 
-            _carPosition = new Vector2(1024 / 2,
-                                      768 / 2
+            _carPosition = new Vector2(screenWidth / 2,
+                                      ScreenHeigh / 2
                                     );
             //_carPosition = new Vector2(GraphicsDevice.Viewport.Width / 2,
             //                           GraphicsDevice.Viewport.Height / 2);
@@ -68,7 +71,7 @@ namespace Car_race_levan
         /// <returns>Direction </returns>
         public Vector2 CarDirection()
         {
-                return Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
+            return Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
 
         }
 
@@ -123,9 +126,6 @@ namespace Car_race_levan
             CarDirection();
             CarPosition += Direction * carSpeedBackwards;
         }
-
-
-
 
 
 
@@ -194,7 +194,7 @@ namespace Car_race_levan
         }
 
         /// <summary>
-        /// Keine Ahnung man... 
+        /// The update(move logic) of the car
         /// </summary>
         /// <param name="car">Das Auto!!</param>
         /// <param name="maxCarSpeed">max speed of the car</param>
@@ -204,6 +204,8 @@ namespace Car_race_levan
             DefineBorders(car);
 
         }
+
+        
 
         public void Move(Car car, float maxCarSpeed, float maxSpeedBackwards)
         {
@@ -278,6 +280,87 @@ namespace Car_race_levan
 
         }
 
+        // GetColorDAta
+
+
+
+
+        //public  bool CarIsOnRoad(Vector2 PositionCar, Texture2D TextureCar, Texture2D TextureRoad)
+        //{
+        //    Rectangle RectangleCar = new Rectangle((int)PositionCar.X, (int)PositionCar.Y, TextureCar.Width, TextureCar.Height);
+
+
+        //    Color[] TextureDataRoad = new Color[TextureRoad.Width * TextureRoad.Height];
+        //    TextureRoad.GetData(TextureDataRoad);
+
+
+
+        //    for (int i = RectangleCar.Top; i < RectangleCar.Bottom; i++)
+        //        for (int j = RectangleCar.Left; j < RectangleCar.Right; j++)
+        //            if (TextureDataRoad[i * TextureRoad.Width + j] == Color.Green)
+        //                return true;
+
+
+
+        //    return true;
+        //}
+
+        public void IsOnRoad(Rectangle carRectangle, Texture2D bg, Car car)
+        {
+            int carPixels = screenWidth * ScreenHeigh;           
+            Color[] myColors = new Color[carPixels];
+            //car.CarTexture.GetData<Color>(0, carRectangle, myColors, 0, carPixels);
+            car.CarTexture.GetData<Color>(myColors, 0, myColors.Length);
+
+            foreach (Color aColor in myColors)
+            {
+                Console.WriteLine(aColor);
+                if (aColor == Color.Black)
+                {
+                    Console.WriteLine(myColors.Length);
+                    Console.WriteLine("COLOR BLACK");
+                }
+                else
+                {
+                    Console.WriteLine(myColors.Length);
+                    Console.WriteLine("No Color");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks the given Texture2D pixel by pixel
+        ///  and returns a List with the position and the color of every pixel
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns>returns a List with the position and the color of every pixel</returns>
+        public Color[,]  RoadPosition(Texture2D track)
+        {
+            Color[] myColors = new Color[track.Width * track.Height];
+            track.GetData(myColors);
+
+            Color[,] colors2D = new Color[track.Width, track.Height];
+            for (int x = 0; x < screenWidth; x++)
+            {
+                for (int y = 0; y < track.Height; y++)
+                {
+                    colors2D[x, y] = myColors[x + y * track.Width];
+                }
+            }
+
+            
+
+          
+
+            Console.WriteLine(colors2D[1000, 15]);
+            return colors2D;
+
+
+        }
+
+        
+
+
 
         // TODO: add default position for the cars
         // ex. cabrio at start position 1 
@@ -289,14 +372,15 @@ namespace Car_race_levan
         /// <param name="car"></param>
         public void Draw(SpriteBatch spriteBatch, Car car)
         {
-            Vector2 origin = new Vector2(car.CarTexture.Width / 2, car.CarTexture.Height / 2);
-           // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
+
+            Vector2 origin = new Vector2(car.CarTexture.Width / 5, car.CarTexture.Height / 5);
+            // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
 
             //spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
 
-            spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 1f);
 
-            Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
+            //Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
         }
 
 
