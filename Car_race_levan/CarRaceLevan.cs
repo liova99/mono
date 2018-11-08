@@ -26,6 +26,7 @@ namespace Car_race_levan
         Track easyTrack = new Track();
         Track greenBG = new Track();
         Track blackBG = new Track();
+        Track testTrack = new Track();
 
         // Cars
         Car cabrio = new Car();
@@ -43,13 +44,12 @@ namespace Car_race_levan
 
         //public Bitmap bitmap;
 
+
+        public static System.Drawing.Image image; 
+        public System.Drawing.Bitmap trackBitmap;
+
+
         
-        public static System.Drawing.Image image = System.Drawing.Image.FromFile("C:\\MyDocs\\Projects\\Car_race_levan\\Car_race_levan\\Content\\track_big_bmp.bmp");
-        public System.Drawing.Bitmap trackBitmap = new System.Drawing.Bitmap(image,1024,768 );
-
-        
-
-
 
         public CarRaceLevan()
         {
@@ -68,8 +68,6 @@ namespace Car_race_levan
         protected override void Initialize()
         {
             
-
-
             // TODO: Add your initialization logic 
 
             // ======= Graphic settings ===============
@@ -92,8 +90,24 @@ namespace Car_race_levan
             cabrio.Input = new Input() { Up = Keys.Up, Down = Keys.Down, Left = Keys.Left, Right = Keys.Right };
             blueCar.Input = new Input() { Up = Keys.W, Down = Keys.S, Left = Keys.A, Right = Keys.D };
 
+            // Cars star position
             cabrio.CarPosition = new Vector2(707 , 53);
             blueCar.CarPosition = new Vector2(707, 125);
+
+            // Take the track_big_bmp file convertet it to bmp with screenWidht and screenHeight values 
+            image = System.Drawing.Image.FromFile("C:\\MyDocs\\Projects\\Car_race_levan\\Car_race_levan\\Content\\track_big_bmp.bmp");
+            // new trackBitmap object from Image
+            trackBitmap = new System.Drawing.Bitmap(image, screenWidth, ScreenHeight);
+            // call the function to take the list with colors of every pixel
+            cabrio.Pixels(trackBitmap);
+
+
+
+            MouseState mouseState = Mouse.GetState();
+            String mousePosition = new Vector2(mouseState.X, mouseState.Y).ToString();
+
+            this.IsMouseVisible = true;
+
 
 
             base.Initialize();
@@ -121,13 +135,13 @@ namespace Car_race_levan
             greenBG.TrackTexture = Content.Load<Texture2D>("greenBG");
             blackBG.TrackTexture = Content.Load<Texture2D>("blackBG");
             font = Content.Load<SpriteFont>("font");
-            //bmpTexture = Content.LoadLocalized<Texture2D>("trackBitmap");
+            testTrack.TrackTexture = Content.LoadLocalized<Texture2D>("track_big_bmp");
+
+            
             //bmpTexture = new Texture2D(1024.768);
 
-
-
-
-            cabrio.Pixels(trackBitmap);
+            // 
+          
             //cabrio.RoadPosition(bmpTexture);
         }
 
@@ -150,28 +164,11 @@ namespace Car_race_levan
             // Exit if escape key will pressed 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)){ Exit(); }
 
-            Rectangle carRectangle = new Rectangle((int)cabrio.CarPosition.X, (int)cabrio.CarPosition.Y, cabrio.CarTexture.Width/5, cabrio.CarTexture.Height/5);
-            Rectangle carRectangle2 = new Rectangle((int)blueCar.CarPosition.X, (int)blueCar.CarPosition.Y, blueCar.CarTexture.Width/5, blueCar.CarTexture.Height/2);
-
-            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            timer -= elapsed;
-            if (timer < 0)
-            {
-                
-               // cabrio.IsOnRoad(carRectangle, greenBG.TrackTexture, cabrio);
-                timer = TIMER;   //Reset Timer
-            }
-            // cabrio.IsOnRoad(carRectangle, cabrio);
-
-            //cabrio.TextureTo2DArray(cabrio.CarTexture);
-
-            //Console.WriteLine("========");
-            //Console.WriteLine(cabrio.CarIsOnRoad(cabrio.CarPosition, cabrio.CarTexture, easyTrack.TrackTexture));
-            //Console.WriteLine("========");
-
-
             
-            if(cabrio.IsOnRoad(cabrio) == true)
+
+           
+            
+            if(cabrio.IsOnRoad(cabrio, cabrio.CarRectangle) == true)
             {
                 Console.WriteLine("ON ROAD");
             }
@@ -180,11 +177,15 @@ namespace Car_race_levan
                 Console.WriteLine("NOT ON ROAD");
             }
 
-            if (carRectangle.Intersects(carRectangle2))
+
+
+
+            if (cabrio.CarRectangle.Intersects(blueCar.CarRectangle))
             {
                 cabrio.CarSpeed = 0;
                 blueCar.CarSpeed = 0;
             }
+
             cabrio.Update(cabrio, 7, 3);
             blueCar.Update(blueCar, 7, 3);
 
@@ -218,12 +219,13 @@ namespace Car_race_levan
 
 
             //==Tracks ==
-            blackBG.Draw(spriteBatch, Color.Transparent, blackBG, screenWidth, ScreenHeight);
+            //blackBG.Draw(spriteBatch, Color.Transparent, blackBG, screenWidth, ScreenHeight);
            greenBG.Draw(spriteBatch, Color.White, greenBG,  screenWidth, ScreenHeight);
-            blackBG.Draw(spriteBatch, Color.Transparent, blackBG, screenWidth, ScreenHeight);
+            //blackBG.Draw(spriteBatch, Color.Transparent, blackBG, screenWidth, ScreenHeight);
 
             easyTrack.Draw(spriteBatch, Color.White, easyTrack, screenWidth, ScreenHeight);
 
+            easyTrack.Draw(spriteBatch, Color.White, testTrack, screenWidth, ScreenHeight);
 
 
 
@@ -234,7 +236,12 @@ namespace Car_race_levan
 
 
             // ==DEBUG==
+
+            MouseState mouseState = Mouse.GetState();
+            String mousePosition = new Vector2(mouseState.X, mouseState.Y).ToString();
+
             spriteBatch.DrawString(font, cabrioPosition, new Vector2(0, 0), Color.Red);
+            spriteBatch.DrawString(font, mousePosition, new Vector2(0, 80), Color.Red);
 
             //cabrio.RoadPosition(easyTrack.TrackTexture);
 
