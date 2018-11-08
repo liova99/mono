@@ -3,7 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Drawing;
+//using System.Drawing;
+//using System.Windows.Media.Imaging;
 
 namespace Car_race_levan
 {
@@ -38,8 +39,17 @@ namespace Car_race_levan
 
         float timer = 3;         //Initialize a 10 second timer
         const float TIMER = 3;
-        public Texture2D BmpTexture;
+        public Texture2D bmpTexture;
+
+        //public Bitmap bitmap;
+
         
+        public static System.Drawing.Image image = System.Drawing.Image.FromFile("C:\\MyDocs\\Projects\\Car_race_levan\\Car_race_levan\\Content\\track_big_bmp.bmp");
+        public System.Drawing.Bitmap trackBitmap = new System.Drawing.Bitmap(image,1024,768 );
+
+        
+
+
 
         public CarRaceLevan()
         {
@@ -57,6 +67,8 @@ namespace Car_race_levan
         /// </summary>
         protected override void Initialize()
         {
+            
+
 
             // TODO: Add your initialization logic 
 
@@ -109,9 +121,14 @@ namespace Car_race_levan
             greenBG.TrackTexture = Content.Load<Texture2D>("greenBG");
             blackBG.TrackTexture = Content.Load<Texture2D>("blackBG");
             font = Content.Load<SpriteFont>("font");
-            BmpTexture = Content.Load<Texture2D>("track_big_bmp");
+            //bmpTexture = Content.LoadLocalized<Texture2D>("trackBitmap");
+            //bmpTexture = new Texture2D(1024.768);
 
-            cabrio.RoadPosition(BmpTexture);
+
+
+
+            cabrio.Pixels(trackBitmap);
+            //cabrio.RoadPosition(bmpTexture);
         }
 
         /// <summary>
@@ -154,7 +171,14 @@ namespace Car_race_levan
 
 
             
-
+            if(cabrio.IsOnRoad(cabrio) == true)
+            {
+                Console.WriteLine("ON ROAD");
+            }
+            else
+            {
+                Console.WriteLine("NOT ON ROAD");
+            }
 
             if (carRectangle.Intersects(carRectangle2))
             {
@@ -188,6 +212,11 @@ namespace Car_race_levan
             spriteBatch.Begin();
 
 
+            //So try the below to automatically draw an image full screen.
+
+            //SpriteBatch.Draw(background_texture, GraphicsDevice.Viewport.Bounds, Color.White);
+
+
             //==Tracks ==
             blackBG.Draw(spriteBatch, Color.Transparent, blackBG, screenWidth, ScreenHeight);
            greenBG.Draw(spriteBatch, Color.White, greenBG,  screenWidth, ScreenHeight);
@@ -206,6 +235,9 @@ namespace Car_race_levan
 
             // ==DEBUG==
             spriteBatch.DrawString(font, cabrioPosition, new Vector2(0, 0), Color.Red);
+
+            //cabrio.RoadPosition(easyTrack.TrackTexture);
+
 
             spriteBatch.End();
 
