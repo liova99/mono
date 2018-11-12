@@ -33,6 +33,7 @@ namespace Car_race_levan
 
         public long LongColor;
 
+        //==Chek if Car on Road
         public System.Drawing.Color[,] ColorOfPixel { get; set; }
 
         public Rectangle CarRectangle;
@@ -41,7 +42,7 @@ namespace Car_race_levan
         public System.Drawing.Color rightForwardCorner { get; set; }
         public System.Drawing.Color leftBackCorner { get; set; }
         public System.Drawing.Color rightBackCorner { get; set; }
-
+        //== End Chek if Car on Road
         public Car()
         {
 
@@ -164,7 +165,6 @@ namespace Car_race_levan
                 //car.MoveBackwards(5);
                 _carPosition.X = 3;
 
-
                 //cabrio.CarSpeed = -Math.Max((cabrio.CarSpeed * 0.3f), 1);
                 //cabrio.CarSpeedBackwards = -Math.Max((cabrio.CarSpeedBackwards * 0.3f), 1);
 
@@ -263,17 +263,17 @@ namespace Car_race_levan
                 CarPosition = car.CarPosition;
                 car.CarSpeedBackwards -= 0.1f;
             }
+
+            // TODO make the car slower if turns
             //Turn left or right only if speed > 0
             if (kstate.IsKeyDown(Input.Left) & (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
             {
-                car.CarSpeed -= 0.05f;
                 car.CarAngle -= car.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
             }
 
             if (kstate.IsKeyDown(Input.Right) & (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
             {
 
-                car.CarSpeed -= 0.05f;
                 car.CarAngle += car.CarRotationSpeed;
             }
 
