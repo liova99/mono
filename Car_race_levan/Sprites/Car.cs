@@ -37,6 +37,11 @@ namespace Car_race_levan
 
         public Rectangle CarRectangle;
 
+        public System.Drawing.Color leftForwardCorner { get; set; }
+        public System.Drawing.Color rightForwardCorner { get; set; }
+        public System.Drawing.Color leftBackCorner { get; set; }
+        public System.Drawing.Color rightBackCorner { get; set; }
+
         public Car()
         {
 
@@ -332,43 +337,64 @@ namespace Car_race_levan
         /// <returns>true or false</returns>
         public Boolean IsOnRoad(Car car, Rectangle carReckangle)
         {
-            
+
             float stringCarPositionX = float.Parse(car.CarPosition.X.ToString());
             float stringCarPositionY = float.Parse(car.CarPosition.Y.ToString());
             try
             {
-                var leftForwardCorner = ColorOfPixel[(carReckangle.Left-carReckangle.Height), carReckangle.Top];
-                var rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
-                var leftBackCorner = ColorOfPixel[carReckangle.Center.X, (carReckangle.Top - carReckangle.Height)];
-                var rightBackCorner = ColorOfPixel[carReckangle.Center.X, carReckangle.Top];
+                if (car.Direction.Y < -0.5) // nach unten
+                {
+                    leftForwardCorner = ColorOfPixel[(carReckangle.Left), carReckangle.Bottom];
+                    rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Bottom)];
+                    leftBackCorner = ColorOfPixel[carReckangle.Left - carReckangle.Height, (carReckangle.Top - carReckangle.Height)];
+                    rightBackCorner = ColorOfPixel[carReckangle.Left, (carReckangle.Top - carReckangle.Height)];
+                }
 
-                if (leftForwardCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
-                rightForwardCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
-                leftBackCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
-                rightBackCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0)
-                )
+                else if (car.Direction.Y > 0.5) // nach oben
+                {
+                    leftForwardCorner = ColorOfPixel[(carReckangle.Left), carReckangle.Top - carReckangle.Height];
+                    rightForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
+                    leftBackCorner = ColorOfPixel[carReckangle.Left, (carReckangle.Top + carReckangle.Height)];
+                    rightBackCorner = ColorOfPixel[carReckangle.Left + carReckangle.Height, carReckangle.Top + carReckangle.Height];
+                }
+
+
+                else if (car.Direction.X < -0.5) // nach rechts
+                {
+                    leftForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), carReckangle.Top];
+                    rightForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), (carReckangle.Top + carReckangle.Height)];
+                    leftBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height)-34, (carReckangle.Top)];
+                    rightBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height)- 34, carReckangle.Top + carReckangle.Height];
+                }
+
+
+
+                else // nach links
+                {
+                    leftForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), carReckangle.Top];
+                    rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
+                    leftBackCorner = ColorOfPixel[carReckangle.X, (carReckangle.Y)];
+                    rightBackCorner = ColorOfPixel[carReckangle.Center.X - carReckangle.Width, carReckangle.Top - carReckangle.Height];
+                }
+
+                // if in Road, return true
+                if (   leftForwardCorner  == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
+                       rightForwardCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
+                       leftBackCorner     == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
+                       rightBackCorner    == System.Drawing.Color.FromArgb(255, 0, 0, 0)
+                    )
                 {
                     return true;
                 }
+
             }
             catch
             {
                 return false;
             }
-            Console.WriteLine(  "asdfasdfasdfasdfadsfas");
-            Console.WriteLine(carReckangle.Left +" "+ carReckangle.Right);
-            ///Console.WriteLine(rightForwardCorner);
-            //Console.WriteLine(leftBackCorner);
-            //Console.WriteLine(rightBackCorner);
-           
-            Console.WriteLine("asdfasdfasdfasdfadsfas");
 
-            
             return false;
         }
-
-
-        //Cre
 
 
 
@@ -396,7 +422,7 @@ namespace Car_race_levan
             //Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
 
             CarRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, carTextureWidth, carTextureHeighth);
-          
+
         }
 
 
@@ -481,7 +507,7 @@ namespace Car_race_levan
         }
 
 
-       
+
 
         // ===== END geters and seters ==========
 

@@ -37,6 +37,9 @@ namespace Car_race_levan
         // === DEBUG == 
         public SpriteFont font;
         public string cabrioPosition;
+        
+
+
 
         float timer = 3;         //Initialize a 10 second timer
         const float TIMER = 3;
@@ -177,6 +180,9 @@ namespace Car_race_levan
                 Console.WriteLine("NOT ON ROAD");
             }
 
+            //Console.WriteLine("X");
+            //Console.WriteLine(blueCar.Direction.X);
+            //Console.WriteLine(blueCar.Direction.Y);
 
 
 
@@ -193,6 +199,8 @@ namespace Car_race_levan
 
             // DEBUG
             cabrioPosition = String.Format("Cabrio, Position {0}\n Angle {1} \n Direction {2}", cabrio.CarPosition, cabrio.CarAngle, cabrio.Direction);
+            
+
 
             //cabrioPosition = (cabrio.CarPosition.ToString());
 
@@ -225,7 +233,7 @@ namespace Car_race_levan
 
             easyTrack.Draw(spriteBatch, Color.White, easyTrack, screenWidth, ScreenHeight);
 
-            easyTrack.Draw(spriteBatch, Color.White, testTrack, screenWidth, ScreenHeight);
+           // easyTrack.Draw(spriteBatch, Color.White, testTrack, screenWidth, ScreenHeight);
 
 
 
