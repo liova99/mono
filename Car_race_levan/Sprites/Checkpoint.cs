@@ -23,16 +23,16 @@ namespace Car_race_levan.Sprites
 
         public Checkpoint()
         {
-            _startLineCheckpointRectangle = new Rectangle(685, 35, 7, 113); // |
-            _firstCheckpointRectangle     = new Rectangle(200, 37, 7, 113); // |
-            _secondCheckpointRectangle    = new Rectangle(51, 571, 101, 7); // --
-            _thirdCheckpointRectangle     = new Rectangle(815, 631, 7, 101); // |
-            _fourthCheckpointRectangle    = new Rectangle(320, 418, 104, 7); // --
-            _fifthCheckpointRectangle     = new Rectangle(900, 184, 88, 7); // --
+            _startLineCheckpointRectangle = new Rectangle(685, 35, 7, 113); // | (horizontally)
+            _firstCheckpointRectangle     = new Rectangle(200, 37, 7, 113); // | (horizontally)
+            _secondCheckpointRectangle    = new Rectangle(51, 571, 101, 7); // -- (vertically)
+            _thirdCheckpointRectangle     = new Rectangle(815, 631, 7, 101); // | (horizontally)
+            _fourthCheckpointRectangle    = new Rectangle(320, 418, 104, 7); // -- (vertically)
+            _fifthCheckpointRectangle     = new Rectangle(900, 184, 88, 7); // -- (vertically)
         }
 
         /// <summary>
-        /// Create Checkpoint line
+        /// Create (Draw) a Checkpoint line
         /// </summary>
         /// <param name="spriteBatch"></param>
         /// <param name="color"></param>
@@ -40,7 +40,6 @@ namespace Car_race_levan.Sprites
         /// <param name="rectangle"></param>
         public void Draw(SpriteBatch spriteBatch, Color color, Checkpoint checkpoint, Rectangle rectangle)
         {
-           
             spriteBatch.Draw(checkpoint.ChekpointTexture, rectangle, color);
         }
 

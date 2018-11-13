@@ -61,35 +61,19 @@ namespace Car_race_levan.Sprites
 
         public Car()
         {
-
-
             //_graphics = new GraphicsDeviceManager(this);
-
             //screenWidth =  GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             //ScreenHeight =  GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
 
             // TODO: NO HARDCODING!!!!!
             screenWidth = 1024;
             ScreenHeight = 768;
 
-
-            _carPosition = new Vector2(screenWidth / 2,
-                                      ScreenHeight / 2
-                                    );
-            //_carPosition = new Vector2(GraphicsDevice.Viewport.Width / 2,
-            //                           GraphicsDevice.Viewport.Height / 2);
-
-            //Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
-            //CarTexture = _car;
-            _carSpeed = 0f;
-            _maxCarSpeed = 0f;
-            _carSpeedBackwards = 0f;
-            _carAngle = 0.00f;
             _carRotationSpeed = 0.05f;
             IsDrifting = false;
 
             // === Checkpoints
-            
             _round = -1;
 
             _onStartCheckpoint  = false;
@@ -98,6 +82,7 @@ namespace Car_race_levan.Sprites
             _onThirdCheckpoint  = false;
             _onFourthCheckpoint = false;
             _onFifthCheckpoint  = true;
+            // === end Checkpoints
         }
 
         // == Methods ===========================
@@ -105,17 +90,12 @@ namespace Car_race_levan.Sprites
         /// <summary>
         /// Direction of which the car must to move
         /// </summary>
-        /// <returns>Direction </returns>
+        /// <returns>Direction of the car</returns>
         public Vector2 CarDirection()
         {
             return Direction = new Vector2((float)Math.Cos(CarAngle), (float)Math.Sin(CarAngle));
-
         }
 
-        public void SetCarRotationSpeed()
-        {
-
-        }
 
         /// <summary>
         /// Move the car 'x' pixels forwards.
@@ -126,8 +106,9 @@ namespace Car_race_levan.Sprites
         {
             CarDirection();
             CarPosition -= Direction * carSpeed;
-
         }
+
+
         /// <summary>
         /// Slide the car forward
         /// if the button will be released.
@@ -136,7 +117,6 @@ namespace Car_race_levan.Sprites
         /// <param name="carSpeed"></param>
         public void SlideForward(float carSpeed)
         {
-
             CarDirection();
             CarPosition -= Direction * carSpeed;
         }
@@ -150,8 +130,9 @@ namespace Car_race_levan.Sprites
         {
             CarDirection();
             CarPosition += Direction * carSpeedBackwards;
-
         }
+
+
         /// <summary>
         /// slide the car a litel bit Backwards,
         /// if the button will be released.
@@ -165,12 +146,12 @@ namespace Car_race_levan.Sprites
         }
 
 
-
         // TODO: maby DefineBordes  method don't belong to the car Class?? 
         // TODO: maby delete it?
+        // TODO: maby not...
         /// <summary>
         /// Define the borders, otherwise the car 
-        /// will be go outside of our screen
+        /// will be go outside of our (your) screen
         /// </summary>
         public void DefineBorders(Car car)
         {
@@ -228,20 +209,22 @@ namespace Car_race_levan.Sprites
 
         }
 
+
         /// <summary>
-        /// The update(move logic) of the car
+        /// The update (move logic) of the car and
+        /// call the DefineBordes funtion
         /// </summary>
-        /// <param name="car">Das Auto!!</param>
-        /// <param name="maxCarSpeed">max speed of the car</param>
+        /// <param name="car">The Car Object</param>
+        /// <param name="maxCarSpeed">Max speed of the car</param>
+        /// <param name="maxSpeedBackwards">Max backwards speed of the car</param>
         public void Update(Car car, float maxCarSpeed, float maxSpeedBackwards)
         {
             Move(car, maxCarSpeed, maxSpeedBackwards);
             DefineBorders(car);
-
         }
 
         /// <summary>
-        /// Move the car in all direktion 
+        /// Move the car by the press of Keys 
         /// </summary>
         /// <param name="car"> Your Car object</param>
         /// <param name="maxCarSpeed">Max Speed of the car</param>
@@ -484,12 +467,13 @@ namespace Car_race_levan.Sprites
 
         }
 
-
-
-
+        public void Coalition()
+        {
+            // TODO: make the cars collidieren
+        }
 
         /// <summary>
-        /// Draw the Textur of your car,
+        /// Draw the Textur of the car,
         /// initialize the default position
         /// </summary>
         /// <param name="spriteBatch"></param>
@@ -504,7 +488,6 @@ namespace Car_race_levan.Sprites
             // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
 
             spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 1f);
-
 
             CarRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, carTextureWidth, carTextureHeighth);
 
@@ -665,12 +648,6 @@ namespace Car_race_levan.Sprites
 
 
         // ===== END geters and seters ==========
-
-
-
-
-
-
 
 
 

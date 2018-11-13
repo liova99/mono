@@ -7,31 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-// TODO add the right namespace (sprites)
 namespace Car_race_levan.Sprites
 {
     
 
     public class Track
     {
-        //GraphicsDevice graphicsDevice;
 
         public Texture2D TrackTexture;
-
-        //public Texture2D TrackBG;
-
-        // heightMap
-        int width;
-        int height;
-
-        Texture2D heightMap;
-        Texture2D heightMapTexture;
-        VertexPositionTexture[] vertices; // ??
-
-
-        // array to read heightMap data
-        float[,] heightMapData;
-
 
         public Track()
         {
@@ -48,42 +31,7 @@ namespace Car_race_levan.Sprites
         {
             Rectangle mainFrame = new Rectangle(0, 0, screenWidth, ScreenHeight);
             spriteBatch.Draw(track.TrackTexture, mainFrame, color);
-
         }
-
-        // The next region wont use. 
-        #region HeighthMap 
-
-        public void SetHeightMapData(Texture2D heightMap, Texture2D heightMapTexture)
-        {
-            this.heightMap = heightMap;
-            this.heightMapTexture = heightMapTexture;
-            width = heightMap.Width;
-            height = heightMap.Height;
-            SetHeights();
-        }
-        public void SetHeights()
-        {
-            Color[] greyValues = new Color[width * height];
-            heightMap.GetData(greyValues);
-            heightMapData = new float[width, height];
-            for (int x = 0; x < width; x++)
-            {
-                for (int y = 0; y < height; y++)
-                {
-                    heightMapData[x, y] = greyValues[x + y * width].G / 3.1f;
-                }
-            }
-        }
-
-        //public void Draw()
-        //{
-        //    //graphicsDevice.(PrimitiveType.TriangleList, vertices, 0, vertices.Length);
-        //}
-
-        #endregion HeightMap
-
-
 
     }
 
