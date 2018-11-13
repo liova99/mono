@@ -1,4 +1,22 @@
+### Graphic Settings 
 
+```c#
+            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+
+            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+
+screenWidth = graphics.PreferredBackBufferWidth;
+ScreenHeight = graphics.PreferredBackBufferHeight;
+graphics.PreferredBackBufferWidth = GraphicsDevice.Viewport.Width;
+graphics.PreferredBackBufferHeight = GraphicsDevice.Viewport.Height;
+
+```
+
+
+
+
+
+### Colors
 
 
 ```c#
@@ -36,10 +54,14 @@
 
 
 
- 
-​                
+### Timer
 
 ```c#
+//Initialize the timer
+float timer = 3;         
+const float TIMER = 3;
+
+
 float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 timer -= elapsed;
 if (timer < 0)
@@ -49,3 +71,69 @@ cabrio.IsOnRoad(carRectangle, greenBG.TrackTexture, cabrio);
 timer = TIMER;   //Reset Timer
 }
 ```
+
+
+
+### HeighthMap
+
+```c#
+Texture2D heightMap;
+Texture2D heightMapTexture;
+VertexPositionTexture[] vertices; // ??
+
+
+// heightMap
+        int width;
+        int height;  
+
+// array to read heightMap data
+        float[,] heightMapData;   
+
+#region HeighthMap 
+
+    public void SetHeightMapData(Texture2D heightMap, Texture2D heightMapTexture)
+    {
+        this.heightMap = heightMap;
+        this.heightMapTexture = heightMapTexture;
+        width = heightMap.Width;
+        height = heightMap.Height;
+        SetHeights();
+    }
+    public void SetHeights()
+    {
+        Color[] greyValues = new Color[width * height];
+        heightMap.GetData(greyValues);
+        heightMapData = new float[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                heightMapData[x, y] = greyValues[x + y * width].G / 3.1f;
+            }
+        }
+    }
+
+    public void Draw()
+    {
+        //graphicsDevice.(PrimitiveType.TriangleList, vertices, 0, vertices.Length);
+    }
+
+    #endregion HeightMap
+```
+
+
+### Keyboard previous state
+
+`KeyboardState previousState;`
+
+
+
+### Full screen
+
+```c#
+graphics.IsFullScreen = true;
+	OR
+graphics.ToggleFullScreen(); 
+
+```
+
