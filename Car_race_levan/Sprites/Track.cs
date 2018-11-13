@@ -7,7 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Car_race_levan
+// TODO add the right namespace (sprites)
+namespace Car_race_levan.Sprites
 {
     
 
@@ -50,6 +51,7 @@ namespace Car_race_levan
 
         }
 
+        // The next region wont use. 
         #region HeighthMap 
 
         public void SetHeightMapData(Texture2D heightMap, Texture2D heightMapTexture)

@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace Car_race_levan
+// TODO add the right namespace (sprites)
+namespace Car_race_levan.Sprites
 {
     public class Car : Game
     {
@@ -183,7 +183,6 @@ namespace Car_race_levan
             }
 
 
-
             if (car.CarPosition.X >= screenWidth)
             {
                 car.CarSpeed = 0;
@@ -214,7 +213,6 @@ namespace Car_race_levan
             DefineBorders(car);
 
         }
-
 
 
         public void Move(Car car, float maxCarSpeed, float maxSpeedBackwards)
@@ -268,12 +266,13 @@ namespace Car_race_levan
             //Turn left or right only if speed > 0
             if (kstate.IsKeyDown(Input.Left) & (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
             {
+                MakeTheCarSlower(car,4.5f);
                 car.CarAngle -= car.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
             }
 
             if (kstate.IsKeyDown(Input.Right) & (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
             {
-
+                MakeTheCarSlower(car,4.5f);
                 car.CarAngle += car.CarRotationSpeed;
             }
 
@@ -316,15 +315,6 @@ namespace Car_race_levan
                     colors2D[i, h] = pixelColor;
                 }
             }
-
-            //if (colors2D[707, 53] != Color.Transparent)
-            //{
-            //    Console.WriteLine("asdflaksdjflkadsfjlkadsjflkads");
-            //}
-
-            Console.WriteLine(colors2D[707, 53]);
-            Console.WriteLine("==================");
-            Console.WriteLine();
 
             return ColorOfPixel = colors2D;
         }
@@ -390,10 +380,27 @@ namespace Car_race_levan
             }
             catch
             {
+                MakeTheCarSlower(car,1);
                 return false;
             }
-
+            MakeTheCarSlower(car,1);
             return false;
+        }
+
+
+
+        /// <summary>
+        /// Make the car slower.
+        /// </summary>
+        /// <param name="car">Your car objeckt</param>
+        /// <param name="maxAllowedSpeed">The max allowed speed of your car</param>
+        public void MakeTheCarSlower(Car car, float maxAllowedSpeed)
+        {
+            Console.WriteLine("carSpeed: " + car.CarSpeed);
+            if (car.CarSpeed > maxAllowedSpeed)
+            {
+                car.CarSpeed -= 0.2f;
+            }
         }
 
 
