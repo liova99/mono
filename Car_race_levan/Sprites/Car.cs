@@ -33,7 +33,21 @@ namespace Car_race_levan.Sprites
 
         public long LongColor;
 
-        //==Chek if Car on Road
+        // ==== CheckPonitsCounter=====
+        Checkpoint checkpoint = new Checkpoint();
+        private int _onCheckpoint;
+        private int _round;
+
+        private bool _onStartCheckpoint;
+        private bool _onFirstCheckpoint;
+        private bool _onSecondCheckpoint;
+        private bool _onThirdCheckpoint;
+        private bool _onFourthCheckpoint;
+        private bool _onFifthCheckpoint;
+        // ==== End CheckPonitsCounter=====
+
+
+        //=====Check if Car on Road========================
         public System.Drawing.Color[,] ColorOfPixel { get; set; }
 
         public Rectangle CarRectangle;
@@ -42,7 +56,9 @@ namespace Car_race_levan.Sprites
         public System.Drawing.Color rightForwardCorner { get; set; }
         public System.Drawing.Color leftBackCorner { get; set; }
         public System.Drawing.Color rightBackCorner { get; set; }
-        //== End Chek if Car on Road
+        // ======= End Chek if Car on Road===============
+
+
         public Car()
         {
 
@@ -72,6 +88,16 @@ namespace Car_race_levan.Sprites
             _carRotationSpeed = 0.05f;
             IsDrifting = false;
 
+            // === Checkpoints
+            
+            _round = -1;
+
+            _onStartCheckpoint  = false;
+            _onFirstCheckpoint  = false;
+            _onSecondCheckpoint = false;
+            _onThirdCheckpoint  = false;
+            _onFourthCheckpoint = false;
+            _onFifthCheckpoint  = true;
         }
 
         // == Methods ===========================
@@ -214,7 +240,12 @@ namespace Car_race_levan.Sprites
 
         }
 
-
+        /// <summary>
+        /// Move the car in all direktion 
+        /// </summary>
+        /// <param name="car"> Your Car object</param>
+        /// <param name="maxCarSpeed">Max Speed of the car</param>
+        /// <param name="maxSpeedBackwards">Max speed car can go backwards</param>
         public void Move(Car car, float maxCarSpeed, float maxSpeedBackwards)
         {
             var kstate = Keyboard.GetState();
@@ -291,7 +322,7 @@ namespace Car_race_levan.Sprites
 
         /// <summary>
         /// Creates two-dimensional  array  
-        /// tha contains the color of every pixel from
+        /// that contains the color of every pixel from
         /// the given bitmap and assignt it to
         /// ColorOfPixel array
         /// </summary>
@@ -321,11 +352,11 @@ namespace Car_race_levan.Sprites
 
 
         /// <summary>
-        /// Checks if the car is on Road
+        /// Checks if the car is on Track
         /// </summary>
         /// <param name="car">You car object </param>
         /// <returns>true or false</returns>
-        public Boolean IsOnRoad(Car car, Rectangle carReckangle)
+        public Boolean IsOnTrack(Car car, Rectangle carReckangle)
         {
 
             float stringCarPositionX = float.Parse(car.CarPosition.X.ToString());
@@ -388,7 +419,7 @@ namespace Car_race_levan.Sprites
         }
 
 
-
+        // TODO: backwards too!
         /// <summary>
         /// Make the car slower.
         /// </summary>
@@ -403,10 +434,60 @@ namespace Car_race_levan.Sprites
             }
         }
 
+        /// <summary>
+        /// Checks the Checkpoints. The car must be pass throught next
+        /// checkpoint. Round counter too.
+        /// </summary>
+        /// <param name="car">Your Car object</param>
+        public void CheckpointCounter(Car car)
+        {
+
+            if (car.CarRectangle.Intersects(checkpoint.StartLineCheckpointRectangle) & car.OnFifthCheckpoint == true)
+            {
+                car.Round += 1;
+                car.OnCheckpoint = 0;
+                car.OnFifthCheckpoint = false;
+                car.OnStartCheckpoint = true;
+            }
+            else if (car.CarRectangle.Intersects(checkpoint.FirstCheckpointRectangle) & car.OnStartCheckpoint == true)
+            {
+                car.OnCheckpoint += 1;
+                car.OnStartCheckpoint = false;
+                car.OnFirstCheckpoint = true;
+            }
+            else if (car.CarRectangle.Intersects(checkpoint.SecondCheckpointRectangle) & car.OnFirstCheckpoint == true)
+            {
+                car.OnCheckpoint += 1;
+                car.OnFirstCheckpoint =  false;
+                car.OnSecondCheckpoint = true;
+            }
+            else if (car.CarRectangle.Intersects(checkpoint.ThirdCheckpointRectangle) & car.OnSecondCheckpoint == true)
+            {
+                car.OnCheckpoint += 1;
+                car.OnSecondCheckpoint = false;
+                car.OnThirdCheckpoint = true;
+            }
+            else if (car.CarRectangle.Intersects(checkpoint.FourthCheckpointRectangle) & car.OnThirdCheckpoint == true)
+            {
+                car.OnCheckpoint += 1;
+                car.OnThirdCheckpoint = false;
+                car.OnFourthCheckpoint = true;
+            }
+            else if (car.CarRectangle.Intersects(checkpoint.FifthCheckpointRectangle) & car.OnFourthCheckpoint == true)
+            {
+                car.OnCheckpoint += 1;
+                car.OnFourthCheckpoint = false;
+                car.OnFifthCheckpoint = true;
+            }
 
 
-        // TODO: add default position for the cars
-        // ex. cabrio at start position 1 
+
+        }
+
+
+
+
+
         /// <summary>
         /// Draw the Textur of your car,
         /// initialize the default position
@@ -422,11 +503,8 @@ namespace Car_race_levan.Sprites
             Vector2 origin = new Vector2(carTextureWidth, carTextureWidth);
             // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
 
-            //spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 0f);
-
             spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 1f);
 
-            //Rectangle carRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, car.CarTexture.Width, car.CarTexture.Height);
 
             CarRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, carTextureWidth, carTextureHeighth);
 
@@ -513,6 +591,76 @@ namespace Car_race_levan.Sprites
             }
         }
 
+        // ==== Chekpoints geters and  seters 
+
+        public int Round
+        {
+            get => _round;
+            set
+            {
+                _round = value;
+            }
+        }
+
+        public int OnCheckpoint
+        {
+            get => _onCheckpoint;
+            set
+            {
+                _onCheckpoint = value;
+            }
+        }
+        public bool OnStartCheckpoint
+        {
+            get => _onStartCheckpoint;
+            set
+            {
+                _onStartCheckpoint = value;
+            }
+        }
+        public bool OnFirstCheckpoint
+        {
+            get => _onFirstCheckpoint;
+            set
+            {
+                _onFirstCheckpoint = value;
+            }
+        }
+        public bool OnSecondCheckpoint
+        {
+            get => _onSecondCheckpoint;
+            set
+            {
+                _onSecondCheckpoint = value;
+            }
+        }
+        public bool OnThirdCheckpoint
+        {
+            get => _onThirdCheckpoint;
+            set
+            {
+                _onThirdCheckpoint = value;
+            }
+        }
+        public bool OnFourthCheckpoint
+        {
+            get => _onFourthCheckpoint;
+            set
+            {
+                _onFourthCheckpoint = value;
+            }
+        }
+        public bool OnFifthCheckpoint
+        {
+            get => _onFifthCheckpoint;
+            set
+            {
+                _onFifthCheckpoint = value;
+            }
+        }
+
+
+        // ==== end Chekpoints geters seters
 
 
 

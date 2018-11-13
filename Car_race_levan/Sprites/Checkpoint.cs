@@ -23,12 +23,12 @@ namespace Car_race_levan.Sprites
 
         public Checkpoint()
         {
-            _startLineCheckpointRectangle = new Rectangle(685, 35, 10, 113); // |
-            _firstCheckpointRectangle = new Rectangle(200, 37, 10, 113); // |
-            _secondCheckpointRectangle = new Rectangle(51, 571, 101, 10); // --
-            _thirdCheckpointRectangle = new Rectangle(815, 631, 10, 103); // |
-            _fourthCheckpointRectangle = new Rectangle(320, 418, 104, 10); // --
-            _fifthCheckpointRectangle = new Rectangle(900, 184, 88, 10); // --
+            _startLineCheckpointRectangle = new Rectangle(685, 35, 7, 113); // |
+            _firstCheckpointRectangle     = new Rectangle(200, 37, 7, 113); // |
+            _secondCheckpointRectangle    = new Rectangle(51, 571, 101, 7); // --
+            _thirdCheckpointRectangle     = new Rectangle(815, 631, 7, 101); // |
+            _fourthCheckpointRectangle    = new Rectangle(320, 418, 104, 7); // --
+            _fifthCheckpointRectangle     = new Rectangle(900, 184, 88, 7); // --
         }
 
         /// <summary>
