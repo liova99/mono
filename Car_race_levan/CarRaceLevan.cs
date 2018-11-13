@@ -23,14 +23,17 @@ namespace Car_race_levan
         private int ScreenHeight;
 
         // Track
-        Track easyTrack = new Track();
-        Track greenBG = new Track();
-        Track blackBG = new Track();
-        Track testTrack = new Track();
+        Sprites.Track easyTrack = new Sprites.Track();
+        Sprites.Track greenBG =   new Sprites.Track();
+        Sprites.Track blackBG =   new Sprites.Track();
+        Sprites.Track testTrack = new Sprites.Track();
 
         // Cars
-        Car cabrio = new Car();
-        Car blueCar = new Car();
+        Sprites.Car cabrio =  new  Sprites.Car();
+        Sprites.Car blueCar = new Sprites.Car();
+
+        // Checkpoints
+        Sprites.Checkpoint checkpoint = new Sprites.Checkpoint();
 
         // KeyboardInteraction keyboardInteraction = new KeyboardInteraction();
 
@@ -105,12 +108,10 @@ namespace Car_race_levan
             cabrio.Pixels(trackBitmap);
 
 
-
+            // Make mouse visible
             MouseState mouseState = Mouse.GetState();
             String mousePosition = new Vector2(mouseState.X, mouseState.Y).ToString();
-
-            this.IsMouseVisible = true;
-
+            IsMouseVisible = true;
 
 
             base.Initialize();
@@ -139,6 +140,7 @@ namespace Car_race_levan
             blackBG.TrackTexture = Content.Load<Texture2D>("blackBG");
             font = Content.Load<SpriteFont>("font");
             testTrack.TrackTexture = Content.LoadLocalized<Texture2D>("track_big_bmp");
+            checkpoint.ChekpointTexture = Content.Load<Texture2D>("white_line");
 
             
             //bmpTexture = new Texture2D(1024.768);
@@ -184,7 +186,10 @@ namespace Car_race_levan
             //Console.WriteLine(blueCar.Direction.X);
             //Console.WriteLine(blueCar.Direction.Y);
 
-
+            if (cabrio.CarRectangle.Intersects(checkpoint.FirstCheckpointRectangle))
+            {
+                cabrio.CarSpeed = 0;
+            }
 
             if (cabrio.CarRectangle.Intersects(blueCar.CarRectangle))
             {
@@ -233,7 +238,17 @@ namespace Car_race_levan
 
             easyTrack.Draw(spriteBatch, Color.White, easyTrack, screenWidth, ScreenHeight);
 
-           // easyTrack.Draw(spriteBatch, Color.White, testTrack, screenWidth, ScreenHeight);
+            // easyTrack.Draw(spriteBatch, Color.White, testTrack, screenWidth, ScreenHeight);
+
+            // Checkpoints
+            checkpoint.Draw(spriteBatch, Color.White, checkpoint, checkpoint.StartLineCheckpointRectangle);
+            checkpoint.Draw(spriteBatch, Color.Red, checkpoint, checkpoint.FirstCheckpointRectangle);
+            checkpoint.Draw(spriteBatch, Color.Red, checkpoint, checkpoint.SecondCheckpointRectangle);
+            checkpoint.Draw(spriteBatch, Color.Red, checkpoint, checkpoint.ThirdCheckpointRectangle);
+            checkpoint.Draw(spriteBatch, Color.Red, checkpoint, checkpoint.FourthCheckpointRectangle);
+            checkpoint.Draw(spriteBatch, Color.Red, checkpoint, checkpoint.FifthCheckpointRectangle);
+
+
 
 
 
