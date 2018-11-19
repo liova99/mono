@@ -14,7 +14,7 @@ namespace Car_race_levan.Sprites
     public class Car : Game
     {
         // Almost everything is private for education purpose
-        private GraphicsDeviceManager _graphics;
+        private GraphicsDeviceManager _graphics; // i will need it if i make posible change screen resolution
         private Texture2D _car;
         private Vector2 _carPosition;
         private Vector2 _direction;
@@ -23,15 +23,12 @@ namespace Car_race_levan.Sprites
         private float _carSpeedBackwards;
         private float _carAngle;
         private float _carRotationSpeed;
-        private bool _isDrifting;
-        public Color[] SurfaceColor;
         public KeyboardState previusKeyboardState { get; set; }
 
         private int screenWidth;
         private int ScreenHeight;
-        public Input Input;
+        public Input Input; // Keyboard Input
 
-        public long LongColor;
 
         // ==== CheckPonitsCounter=====
         Checkpoint checkpoint = new Checkpoint();
@@ -51,10 +48,6 @@ namespace Car_race_levan.Sprites
         public bool IsDriftingLeft { get; set; }
         public bool IsDriftingRight { get; set; }
         public float Driftangle { get; set; }
-        
-
-        //public Vector2 CarDriftDirection { get; set; }
-
         // ==== End Drifting =========================
 
         //=====Check if Car on Road========================
@@ -67,6 +60,10 @@ namespace Car_race_levan.Sprites
         public System.Drawing.Color leftBackCorner { get; set; }
         public System.Drawing.Color rightBackCorner { get; set; }
         // ======= End Chek if Car on Road===============
+
+        //===== DEBUG ===== 
+        public Rectangle CarRectagleTest;
+
 
 
         public Car()
@@ -81,7 +78,6 @@ namespace Car_race_levan.Sprites
             ScreenHeight = 768;
 
             _carRotationSpeed = 0.05f;
-            _isDrifting = true;
 
             // === Checkpoints
             _round = -1;
@@ -104,7 +100,9 @@ namespace Car_race_levan.Sprites
         // == Methods ===========================
 
         /// <summary>
-        /// Direction of which the car must to move
+        /// Direction of which the car must to move.
+        /// If the car is Drifting, the direction will be changed 
+        /// so the car will be slide to the left or right.
         /// </summary>
         /// <returns>Direction of the car</returns>
         public Vector2 CarDirection()
@@ -321,8 +319,8 @@ namespace Car_race_levan.Sprites
             }
 
             // === Drifting ========================================
-
-            // the speed must be > x (3)
+            // TODO: make drifring realistic
+            // the speed must be > x (4)
             // the left or right buttun must be pressed
             // the down key must not be pressed
             // the previus pressed key must be not other than the curent, tha means
@@ -331,7 +329,7 @@ namespace Car_race_levan.Sprites
             {
                 IsDriftingLeft = true;
             }
-            else if (car.CarSpeed > 3 & kstate.IsKeyDown(Input.Right) & !kstate.IsKeyDown(Input.Down) & !previusKeyboardState.IsKeyDown(Input.Left))
+            else if (car.CarSpeed > 4 & kstate.IsKeyDown(Input.Right) & !kstate.IsKeyDown(Input.Down) & !previusKeyboardState.IsKeyDown(Input.Left))
             {
                 IsDriftingRight = true;
             }
@@ -398,9 +396,10 @@ namespace Car_race_levan.Sprites
         /// <returns>true or false</returns>
         public Boolean IsOnTrack(Car car, Rectangle carReckangle)
         {
-
+            // TODO: Check if i need this two float variables
             float stringCarPositionX = float.Parse(car.CarPosition.X.ToString());
             float stringCarPositionY = float.Parse(car.CarPosition.Y.ToString());
+
             try
             {
                 if (car.Direction.Y < -0.5) // nach unten
@@ -424,7 +423,7 @@ namespace Car_race_levan.Sprites
                 {
                     leftForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), carReckangle.Top];
                     rightForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), (carReckangle.Top + carReckangle.Height)];
-                    leftBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height) - 34, (carReckangle.Top)];
+                    leftBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height) - 34, (carReckangle.Top-20)];
                     rightBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height) - 34, carReckangle.Top + carReckangle.Height];
                 }
 
@@ -432,17 +431,26 @@ namespace Car_race_levan.Sprites
 
                 else // nach links
                 {
-                    leftForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), carReckangle.Top];
-                    rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
-                    leftBackCorner = ColorOfPixel[carReckangle.X, (carReckangle.Y)];
-                    rightBackCorner = ColorOfPixel[carReckangle.Center.X - carReckangle.Width, carReckangle.Top - carReckangle.Height];
+                    int topCornerX = (int)car.CarPosition.X - (carReckangle.Width / 2);
+                    int topCornerY = (int)car.CarPosition.Y - (carReckangle.Height / 2);
+
+                    leftForwardCorner = ColorOfPixel[topCornerX, topCornerY + carReckangle.Height];
+                    rightForwardCorner = ColorOfPixel[topCornerX, topCornerY];
+                    leftBackCorner = ColorOfPixel[topCornerX + car.CarRectangle.Width, topCornerY + carReckangle.Height];
+                    rightBackCorner = ColorOfPixel[topCornerX + car.CarRectangle.Width, topCornerY];
+
+                    //leftForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), carReckangle.Top];
+                    //rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
+                    //leftBackCorner = ColorOfPixel[carReckangle.X, (carReckangle.Y)];
+                    //rightBackCorner = ColorOfPixel[carReckangle.Center.X - carReckangle.Width, carReckangle.Top - carReckangle.Height];
                 }
 
                 // if in Road, return true
-                if (leftForwardCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
-                       rightForwardCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
-                       leftBackCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0) &
-                       rightBackCorner == System.Drawing.Color.FromArgb(255, 0, 0, 0)
+                if (leftForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
+                       rightForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
+                       leftBackCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
+                       rightBackCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0)
+                       
                     )
                 {
                     return true;
@@ -451,10 +459,12 @@ namespace Car_race_levan.Sprites
             }
             catch
             {
-                MakeTheCarSlower(car, 1);
+                Console.WriteLine("CATCH NOT ON ROAD");
+                MakeTheCarSlower(car, 1, 1 );
                 return false;
             }
-            MakeTheCarSlower(car, 1);
+
+            MakeTheCarSlower(car, 1, 1 );
             return false;
         }
 
@@ -465,12 +475,17 @@ namespace Car_race_levan.Sprites
         /// </summary>
         /// <param name="car">Your car objeckt</param>
         /// <param name="maxAllowedSpeed">The max allowed speed of your car</param>
-        public void MakeTheCarSlower(Car car, float maxAllowedSpeed)
+        /// <param name="maxAllowedSpeedBackwards">The max "backwards" allowed speed of your car</param>
+        public void MakeTheCarSlower(Car car, float maxAllowedSpeed, float maxAllowedSpeedBackwards)
         {
             //Console.WriteLine("carSpeed: " + car.CarSpeed);
             if (car.CarSpeed > maxAllowedSpeed)
             {
                 car.CarSpeed -= 0.2f;
+            }
+            if(car.CarSpeedBackwards > maxAllowedSpeedBackwards)
+            {
+                car.CarSpeedBackwards -= 0.2f;
             }
         }
 
@@ -520,8 +535,6 @@ namespace Car_race_levan.Sprites
                 car.OnFifthCheckpoint = true;
             }
 
-
-
         }
 
         public void Coalition()
@@ -544,17 +557,34 @@ namespace Car_race_levan.Sprites
             // Center of rotation
             Vector2 origin = new Vector2(carTextureWidth, carTextureHeighth);
             //Vector2 origin = new Vector2(0, carTextureHeighth / 2);
-            CarRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, carTextureWidth, carTextureHeighth);
+            
             spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 1f);
+            CarRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, carTextureWidth, carTextureHeighth);
 
+            CarRectagleTest = new Rectangle((int)(car.CarPosition.X - (CarRectangle.Width / 2)), ((int)car.CarPosition.Y - (CarRectangle.Height / 2)), carTextureWidth, carTextureHeighth);
 
             //Vector2 origin = new Vector2(carTextureWidth, carTextureHeighth);
             // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
 
+        }
+        public void DrawBorder(Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor, SpriteBatch spriteBatch, Texture2D pixel)
+        {
+            // Draw top line
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), borderColor);
 
+            // Draw left line
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), borderColor);
 
-
-
+            // Draw right line
+            spriteBatch.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder),
+                                            rectangleToDraw.Y,
+                                            thicknessOfBorder,
+                                            rectangleToDraw.Height), borderColor);
+            // Draw bottom line
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X,
+                                            rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder,
+                                            rectangleToDraw.Width,
+                                            thicknessOfBorder), borderColor);
         }
 
 
@@ -638,14 +668,6 @@ namespace Car_race_levan.Sprites
             }
         }
 
-        public bool IsDrifting
-        {
-            get => _isDrifting;
-            set
-            {
-                _isDrifting = value;
-            }
-        }
 
         // ==== Chekpoints geters and  seters 
 
