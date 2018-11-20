@@ -151,3 +151,108 @@ http://engineeringdotnet.blogspot.com/2010/04/simple-2d-car-physics-in-games.htm
 
 ```
 
+
+
+### Draw a Rectangle outline
+
+#### first way
+
+make a property
+
+```c#
+Texture2D pixel;
+```
+
+
+
+under the LoadContent()
+
+```c#
+protected override void LoadContent()
+        {
+            pixel = new Texture2D(GraphicsDevice, 1, 1);
+           // so that we can draw whatever color we want on top of it
+            pixel.SetData(new[] { Color.White });  
+
+        }
+```
+
+then in Draw() 
+
+```c#
+Rectangle titleSafeRectangle = cabrio.CarRectangle;
+cabrio.DrawBorder(titleSafeRectangle, 3, Color.Red, spriteBatch, cabrio.CarTexture);
+
+```
+
+and the DrawBorder funtion in the car.cs
+
+```c#
+        public void DrawBorder(Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor, SpriteBatch spriteBatch, Texture2D pixel)
+        {
+            // Draw top line
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), borderColor);
+
+            // Draw left line
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), borderColor);
+
+            // Draw right line
+            spriteBatch.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder),
+                                            rectangleToDraw.Y,
+                                            thicknessOfBorder,
+                                            rectangleToDraw.Height), borderColor);
+            // Draw bottom line
+            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X,
+                                            rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder,
+                                            rectangleToDraw.Width,
+                                            thicknessOfBorder), borderColor);
+        }
+
+```
+
+
+
+### Second way
+
+make a property
+
+```c#
+Texture2D pixel;
+```
+
+
+
+under the LoadContent() the same
+
+```c#
+protected override void LoadContent()
+        {
+            pixel = new Texture2D(GraphicsDevice, 1, 1);
+           // so that we can draw whatever color we want on top of it
+            pixel.SetData(new[] { Color.White });  
+
+        }
+```
+
+then in Draw() 
+
+```c#
+        spriteBatch.Draw(pixel, new Rectangle(cabrio.CarRectagleTest.Left, cabrio.CarRectagleTest.Top, 3, cabrio.CarRectagleTest.Height), Color.Black); // Left
+        spriteBatch.Draw(pixel, new Rectangle(cabrio.CarRectagleTest.Right, cabrio.CarRectagleTest.Top, 3, cabrio.CarRectagleTest.Height), Color.Black); // Right
+        spriteBatch.Draw(pixel, new Rectangle(cabrio.CarRectagleTest.Left, cabrio.CarRectagleTest.Top, cabrio.CarRectagleTest.Width, 3), Color.Black); // Top
+        spriteBatch.Draw(pixel, new Rectangle(cabrio.CarRectagleTest.Left, cabrio.CarRectagleTest.Bottom, cabrio.CarRectagleTest.Width, 3), Color.Black); // Bottom
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
