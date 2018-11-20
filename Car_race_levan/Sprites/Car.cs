@@ -390,62 +390,63 @@ namespace Car_race_levan.Sprites
 
 
         /// <summary>
-        /// Checks if the car is on Track
+        /// Checks if the car is on Track. More info in Comments
         /// </summary>
         /// <param name="car">You car object </param>
         /// <returns>true or false</returns>
-        public Boolean IsOnTrack(Car car, Rectangle carReckangle)
+        public Boolean IsOnTrack(Car car, Rectangle carRectangle)
         {
-            // TODO: Check if i need this two float variables
-            float stringCarPositionX = float.Parse(car.CarPosition.X.ToString());
-            float stringCarPositionY = float.Parse(car.CarPosition.Y.ToString());
+            /* The position of the car is calculate from the center of the car.
+             * I create a rectangle, so the 0,0 punk (left top corner) of the rectangle is
+             * the center of the car but we want that the 0,0 punk ist the top left corner
+             * of the rectangle. So i create the:
+             *      HorizontallyTopCornerX/Y (if the car goes left or right)
+             *      VerticalTopCornerX/Y (if the car goes up or down)
+             * Now we must canculate the Position of every of the 4 angles of the rectangle  
+             * we make this in the Else If statements.
+             * Then compare the positon of every angle with the ColorOfPixel[]. (see Pixels() method)
+             * If on the position of one of the angles ex. {x=158, y=500} there is not Red pixel, return false. 
+            */
 
+            // position of the top left corner of the rectangle
+            // if the car go left or rigth
+            // *-------| << that is our car
+            // |-------|
+            int HorizontallyTopCornerX = (int)car.CarPosition.X - (carRectangle.Width / 2);
+            int HorizontallyTopCornerY = (int)car.CarPosition.Y - (carRectangle.Height / 2);
+
+            // position of the top left corner of the rectangle
+            // if the car goes up or down
+            // *----|
+            // |    | << that is our car
+            // |    |
+            // |----|
+            int VerticalTopCornerX = (int)car.CarPosition.X - (carRectangle.Height / 2);
+            int VerticalTopCornerΥ = (int)car.CarPosition.Y - (carRectangle.Width / 2);
+
+
+            // we know the rectangle Width, Height and the position of the top left corner
+            // We use this to canculate the 3 other angles. That's not rocket science. 
             try
             {
-                if (car.Direction.Y < -0.5) // nach unten
+                // If the Car goes up or down:
+                if (car.Direction.Y < -0.5 || car.Direction.Y > 0.5) 
                 {
-                    leftForwardCorner = ColorOfPixel[(carReckangle.Left), carReckangle.Bottom];
-                    rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Bottom)];
-                    leftBackCorner = ColorOfPixel[carReckangle.Left - carReckangle.Height, (carReckangle.Top - carReckangle.Height)];
-                    rightBackCorner = ColorOfPixel[carReckangle.Left, (carReckangle.Top - carReckangle.Height)];
+                    leftForwardCorner = ColorOfPixel[VerticalTopCornerX, VerticalTopCornerΥ];
+                    rightForwardCorner = ColorOfPixel[(VerticalTopCornerX + carRectangle.Height), VerticalTopCornerΥ];
+                    leftBackCorner = ColorOfPixel[VerticalTopCornerX, (VerticalTopCornerΥ + carRectangle.Width)];
+                    rightBackCorner = ColorOfPixel[(VerticalTopCornerX + carRectangle.Height), (VerticalTopCornerΥ + carRectangle.Height)];
+                }
+                // If the car goes right or left
+                else if (car.Direction.X < -0.5 || car.Direction.X > -0.5) 
+                {
+                    leftForwardCorner = ColorOfPixel[HorizontallyTopCornerX, HorizontallyTopCornerY + carRectangle.Height];
+                    rightForwardCorner = ColorOfPixel[HorizontallyTopCornerX, HorizontallyTopCornerY];
+                    leftBackCorner = ColorOfPixel[HorizontallyTopCornerX + car.CarRectangle.Width, HorizontallyTopCornerY + carRectangle.Height];
+                    rightBackCorner = ColorOfPixel[HorizontallyTopCornerX + car.CarRectangle.Width, HorizontallyTopCornerY];
                 }
 
-                else if (car.Direction.Y > 0.5) // nach oben
-                {
-                    leftForwardCorner = ColorOfPixel[(carReckangle.Left), carReckangle.Top - carReckangle.Height];
-                    rightForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
-                    leftBackCorner = ColorOfPixel[carReckangle.Left, (carReckangle.Top + carReckangle.Height)];
-                    rightBackCorner = ColorOfPixel[carReckangle.Left + carReckangle.Height, carReckangle.Top + carReckangle.Height];
-                }
-
-
-                else if (car.Direction.X < -0.5) // nach rechts
-                {
-                    leftForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), carReckangle.Top];
-                    rightForwardCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height), (carReckangle.Top + carReckangle.Height)];
-                    leftBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height) - 34, (carReckangle.Top-20)];
-                    rightBackCorner = ColorOfPixel[(carReckangle.Left + carReckangle.Height) - 34, carReckangle.Top + carReckangle.Height];
-                }
-
-
-
-                else // nach links
-                {
-                    int topCornerX = (int)car.CarPosition.X - (carReckangle.Width / 2);
-                    int topCornerY = (int)car.CarPosition.Y - (carReckangle.Height / 2);
-
-                    leftForwardCorner = ColorOfPixel[topCornerX, topCornerY + carReckangle.Height];
-                    rightForwardCorner = ColorOfPixel[topCornerX, topCornerY];
-                    leftBackCorner = ColorOfPixel[topCornerX + car.CarRectangle.Width, topCornerY + carReckangle.Height];
-                    rightBackCorner = ColorOfPixel[topCornerX + car.CarRectangle.Width, topCornerY];
-
-                    //leftForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), carReckangle.Top];
-                    //rightForwardCorner = ColorOfPixel[(carReckangle.Left - carReckangle.Height), (carReckangle.Top - carReckangle.Height)];
-                    //leftBackCorner = ColorOfPixel[carReckangle.X, (carReckangle.Y)];
-                    //rightBackCorner = ColorOfPixel[carReckangle.Center.X - carReckangle.Width, carReckangle.Top - carReckangle.Height];
-                }
-
-                // if in Road, return true
+                // if the car is on track, return true
                 if (leftForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
                        rightForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
                        leftBackCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
@@ -467,7 +468,6 @@ namespace Car_race_levan.Sprites
             MakeTheCarSlower(car, 1, 1 );
             return false;
         }
-
 
         // TODO: backwards too!
         /// <summary>
@@ -496,7 +496,11 @@ namespace Car_race_levan.Sprites
         /// <param name="car">Your Car object</param>
         public void CheckpointCounter(Car car)
         {
-
+            /* When you drive througth a checkpoint, it checks if the previus checkpoint.
+             * If the previus checkpoint is set to true then set it to false and set the curent
+             * to true. 
+             * We count the 
+             */
             if (car.CarRectangle.Intersects(checkpoint.StartLineCheckpointRectangle) & car.OnFifthCheckpoint == true)
             {
                 car.Round += 1;
@@ -561,30 +565,11 @@ namespace Car_race_levan.Sprites
             spriteBatch.Draw(car.CarTexture, CarPosition, null, Color.White, car.CarAngle, origin, 0.4f, SpriteEffects.None, 1f);
             CarRectangle = new Rectangle((int)car.CarPosition.X, (int)car.CarPosition.Y, carTextureWidth, carTextureHeighth);
 
-            CarRectagleTest = new Rectangle((int)(car.CarPosition.X - (CarRectangle.Width / 2)), ((int)car.CarPosition.Y - (CarRectangle.Height / 2)), carTextureWidth, carTextureHeighth);
+            CarRectagleTest = new Rectangle(((int)car.CarPosition.X - (CarRectangle.Height / 2)), (int)(car.CarPosition.Y - (CarRectangle.Width / 2)),  carTextureHeighth, carTextureWidth);
 
-            //Vector2 origin = new Vector2(carTextureWidth, carTextureHeighth);
+            // Vector2 origin = new Vector2(carTextureWidth, carTextureHeighth);
             // Vector2 origin = new Vector2(car.CarTexture.Width / 15, car.CarTexture.Height / 15); 
 
-        }
-        public void DrawBorder(Rectangle rectangleToDraw, int thicknessOfBorder, Color borderColor, SpriteBatch spriteBatch, Texture2D pixel)
-        {
-            // Draw top line
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, rectangleToDraw.Width, thicknessOfBorder), borderColor);
-
-            // Draw left line
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X, rectangleToDraw.Y, thicknessOfBorder, rectangleToDraw.Height), borderColor);
-
-            // Draw right line
-            spriteBatch.Draw(pixel, new Rectangle((rectangleToDraw.X + rectangleToDraw.Width - thicknessOfBorder),
-                                            rectangleToDraw.Y,
-                                            thicknessOfBorder,
-                                            rectangleToDraw.Height), borderColor);
-            // Draw bottom line
-            spriteBatch.Draw(pixel, new Rectangle(rectangleToDraw.X,
-                                            rectangleToDraw.Y + rectangleToDraw.Height - thicknessOfBorder,
-                                            rectangleToDraw.Width,
-                                            thicknessOfBorder), borderColor);
         }
 
 
@@ -743,10 +728,6 @@ namespace Car_race_levan.Sprites
 
 
         // ===== END geters and seters ==========
-
-
-
-
 
     }
 
