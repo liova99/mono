@@ -247,9 +247,11 @@ then in Draw()
 
 
 
+### [Server / client connection for Lidgren](http://community.monogame.net/t/server-client-connection-for-lidgren/8567)
 
 
 
+http://community.monogame.net/t/server-client-connection-for-lidgren/8567
 
 
 
