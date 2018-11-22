@@ -1,4 +1,5 @@
 ﻿using Car_race_levan.Models;
+using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -46,8 +47,21 @@ namespace Car_race_levan
         public System.Drawing.Bitmap trackBitmap;
 
 
+        // ==== SERVER === 
+
+        Network network = new Network();
+
+        private NetServer server;
+        //When initialising, create a configuration object.
+        NetPeerConfiguration config = new NetPeerConfiguration("Server");
+
+
+
+
         // === DEBUG == 
         public string cabrioPosition;
+
+
         
 
 
@@ -55,6 +69,13 @@ namespace Car_race_levan
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+
+            // ==== SERVER === 
+
+            
+
+
         }
 
         /// <summary>
@@ -97,6 +118,18 @@ namespace Car_race_levan
             String mousePosition = new Vector2(mouseState.X, mouseState.Y).ToString();
             IsMouseVisible = true;
 
+
+            // SERVER LAN
+            try
+            {
+                //network.StartServer();
+                //network.StartClient();
+                cabrio.StartServer();
+            }
+            catch
+            {
+                Console.WriteLine("SERVER WONT START");
+            }
 
             base.Initialize();
         }
@@ -165,8 +198,19 @@ namespace Car_race_levan
             cabrio.Update(cabrio, 8, 3);
             blueCar.Update(blueCar, 7, 3);
 
-            
-            // === DEBUG ====
+            // ====== SERVER ==== ===================================================
+            try
+            {
+                //network.SendMessage(cabrio.msg);
+                //network.ReadMessages();
+            }
+            catch
+            {
+
+            }
+
+
+            // === DEBUG ======================================================
             cabrioPosition = String.Format("Cabrio, Position {0}\n Angle {1} \n Direction {2}", cabrio.CarPosition, cabrio.CarAngle, cabrio.Direction);
             //if (cabrio.IsOnTrack(cabrio, cabrio.CarRectangle) == true)
             //{
@@ -212,6 +256,13 @@ namespace Car_race_levan
 
             cabrio.Draw(spriteBatch, cabrio);
             blueCar.Draw(spriteBatch, blueCar);
+
+
+
+
+           
+
+
 
 
             // ==DEBUG==

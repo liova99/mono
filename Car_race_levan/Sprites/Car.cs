@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lidgren.Network;
+using System.Net;
+
 
 // TODO add the right namespace (sprites)
 namespace Car_race_levan.Sprites
@@ -61,6 +64,15 @@ namespace Car_race_levan.Sprites
         public System.Drawing.Color rightBackCorner { get; set; }
         // ======= End Chek if Car on Road===============
 
+        // ===== SERVER LAN ===== 
+
+        //static NetManager netCode = new NetManager();
+        Network network = new Network();
+
+        public NetServer server { get; set; }
+
+        public String msg { get; set; }
+
         //===== DEBUG ===== 
         public Rectangle CarRectagleTest;
 
@@ -95,9 +107,41 @@ namespace Car_race_levan.Sprites
             IsDriftingRight = false;
             Driftangle = 0;
 
+            // SERVER 
+            try
+            {
+                //StartServer();
+                //network.StartClient();
+            }
+            catch
+            {
+                Console.WriteLine("SERVER WONT START");
+            }
+
         }
 
         // == Methods ===========================
+
+
+        // SERVER
+        public void StartServer()
+        {
+            var config = new NetPeerConfiguration("hej")
+            { Port = 14242 };
+            server = new NetServer(config);
+            server.Start();
+
+            if (server.Status == NetPeerStatus.Running)
+            {
+                Console.WriteLine("Server is running on port " + config.Port);
+            }
+            else
+            {
+                Console.WriteLine("Server not started...");
+            }
+
+        }
+
 
         /// <summary>
         /// Direction of which the car must to move.
@@ -256,10 +300,29 @@ namespace Car_race_levan.Sprites
         /// <param name="maxSpeedBackwards">Max speed car can go backwards</param>
         public void Move(Car car, float maxCarSpeed, float maxSpeedBackwards)
         {
+            string data;
+            NetIncomingMessage message;
 
+            try
+            {
+                message = server.ReadMessage();
+                data = message.ReadString();
+                Console.WriteLine("TRY>DATA = " + data);
+            }
+            catch
+            {
+                 data = "NULL DATA";
+            }
+
+            //string data = message.ReadString();
+            // SERVER
+
+
+            //string msgFromClient = network.ReadMessages();
+            Console.WriteLine("DATA = " + data);
             var kstate = Keyboard.GetState();
 
-            if (kstate.IsKeyDown(Input.Up))
+            if (kstate.IsKeyDown(Input.Up) || data == "goForward")
             {
                 car.MoveForward(car.CarSpeed);
 
@@ -268,6 +331,13 @@ namespace Car_race_levan.Sprites
                     car.CarSpeed += 0.1f;
                 }
                 CarPosition = car.CarPosition;
+
+
+                // SERVER 
+
+                //msg = "goForward";
+                
+
             }
             // slide the car a litel bit forward, if stop pushing the forward button
             if (kstate.IsKeyUp(Input.Up) & car.CarSpeed > 0) // previousState.IsKeyDown(Keys.Up)
@@ -275,6 +345,9 @@ namespace Car_race_levan.Sprites
                 car.SlideForward(car.CarSpeed);
                 CarPosition = car.CarPosition;
                 car.CarSpeed -= 0.1f;
+
+                // SERVER
+                //msg = "slideForward";
 
             }
             if (kstate.IsKeyDown(Input.Down))
@@ -458,10 +531,10 @@ namespace Car_race_levan.Sprites
                 }
 
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("CATCH NOT ON ROAD");
-                MakeTheCarSlower(car, 1, 1 );
+                Console.WriteLine("CATCH NOT ON ROAD" + e);
+                MakeTheCarSlower(car, 1, 1);
                 return false;
             }
 
