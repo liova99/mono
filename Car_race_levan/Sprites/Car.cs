@@ -235,7 +235,6 @@ namespace Car_race_levan.Sprites
 
         }
 
-
         /// <summary>
         /// The update (move logic) of the car and
         /// call the DefineBordes funtion
@@ -270,7 +269,7 @@ namespace Car_race_levan.Sprites
                 CarPosition = car.CarPosition;
             }
             // slide the car a litel bit forward, if stop pushing the forward button
-            if (kstate.IsKeyUp(Input.Up) & car.CarSpeed > 0) // previousState.IsKeyDown(Keys.Up)
+            if (kstate.IsKeyUp(Input.Up) && car.CarSpeed > 0) // previousState.IsKeyDown(Keys.Up)
             {
                 car.SlideForward(car.CarSpeed);
                 CarPosition = car.CarPosition;
@@ -279,7 +278,7 @@ namespace Car_race_levan.Sprites
             }
             if (kstate.IsKeyDown(Input.Down))
             {
-                //IsDrifting = false;
+                // IsDrifting = false;
                 // break the car to still 
                 if (car.CarSpeed > 0)
                 {
@@ -296,23 +295,23 @@ namespace Car_race_levan.Sprites
                 CarPosition = car.CarPosition;
             }
             // slide the car a litel bit Backwards, if stop pushing the Backwards button
-            if (kstate.IsKeyUp(Input.Down) & car.CarSpeedBackwards > 0)
+            if (kstate.IsKeyUp(Input.Down) && car.CarSpeedBackwards > 0)
             {
                 car.SlideBackwards(car.CarSpeedBackwards);
                 CarPosition = car.CarPosition;
                 car.CarSpeedBackwards -= 0.1f;
             }
 
-            // Update: if the car turns it will drifting and go slower,
+            // Update: if the car turns it will drif and go slower,
             // there is no reason to make it more slower
             // Note: Turn left or right only if speed > 0
-            if (kstate.IsKeyDown(Input.Left) & (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
+            if (kstate.IsKeyDown(Input.Left) && (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
             {
                 //MakeTheCarSlower(car,5f);
                 car.CarAngle -= car.CarRotationSpeed; //carAnlge * (float)gameTime.ElapsedGameTime.TotalSeconds / 1;
             }
 
-            if (kstate.IsKeyDown(Input.Right) & (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
+            if (kstate.IsKeyDown(Input.Right) && (car.CarSpeedBackwards > 0 || car.CarSpeed > 0))
             {
                 //MakeTheCarSlower(car,5f);
                 car.CarAngle += car.CarRotationSpeed;
@@ -325,20 +324,41 @@ namespace Car_race_levan.Sprites
             // the down key must not be pressed
             // the previus pressed key must be not other than the curent, tha means
             // if you drift to the left and then press the right button the Driftangle must be initialised to default (Driftangle = 0)
-            if (car.CarSpeed > 3 & kstate.IsKeyDown(Input.Left) & !kstate.IsKeyDown(Input.Down) & !previusKeyboardState.IsKeyDown(Input.Right) )
+            if (car.CarSpeed > 4 && kstate.IsKeyDown(Input.Left) && !kstate.IsKeyDown(Input.Down) && !previusKeyboardState.IsKeyDown(Input.Right))
             {
                 IsDriftingLeft = true;
+                IsDriftingRight = false;
             }
-            else if (car.CarSpeed > 4 & kstate.IsKeyDown(Input.Right) & !kstate.IsKeyDown(Input.Down) & !previusKeyboardState.IsKeyDown(Input.Left))
+            else if (car.CarSpeed > 4 && kstate.IsKeyDown(Input.Right) && !kstate.IsKeyDown(Input.Down) && !previusKeyboardState.IsKeyDown(Input.Left))
             {
                 IsDriftingRight = true;
+                IsDriftingLeft = false;
             }
+
+            //else if((car.CarSpeed > 0 || car.CarSpeed < 4) && (IsDriftingLeft == true || IsDriftingRight == true) && kstate.IsKeyUp(Input.Left) && kstate.IsKeyUp(Input.Right) )
+            //{
+
+            //    car.SlideForward(car.CarSpeed);
+            //    CarPosition = car.CarPosition;
+            //    car.CarSpeed -= 0.15f;
+            //    Console.WriteLine("SLIDEEEEEe");
+
+            //}
+                       
             else
             {
-                // Default values after drifting
-                IsDriftingLeft = false;
-                IsDriftingRight = false;
-                Driftangle = 0; 
+                if ( (car.CarSpeed < 4 || car.CarSpeed > 0 ) && (car.CarSpeed > 0) && (IsDriftingLeft == true || IsDriftingRight == true) && !kstate.IsKeyDown(Input.Up))
+                {
+                    car.CarSpeed -= 0.1f;
+                }
+                else
+                {
+                    IsDriftingLeft = false;
+                    IsDriftingRight = false;
+                    Driftangle = 0;
+                }
+
+                
             }
 
             if (IsDriftingLeft == true || IsDriftingRight == true) 
@@ -352,11 +372,26 @@ namespace Car_race_levan.Sprites
                 CarPosition -= Direction * 0.1f;
             }
 
-            // ===== End Drifting ====================================================
+            Console.WriteLine(IsDriftingLeft +" ==== "+ IsDriftingRight);
+
+
+            // ===== End Drifting  Move Class ====================================================
 
             previusKeyboardState = Keyboard.GetState();
 
         }
+
+        /// <summary>
+        /// smooth stop after drifting
+        /// </summary>
+        public void SmoothDriftStop()
+        {
+            CarDirection();
+            CarPosition -= Direction * 0.1f;
+        }
+
+        // ===== End Drifting ====================================================
+
 
         /// <summary>
         /// Creates two-dimensional  array  
@@ -447,9 +482,9 @@ namespace Car_race_levan.Sprites
                 }
 
                 // if the car is on track, return true
-                if (leftForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
-                       rightForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
-                       leftBackCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &
+                if (leftForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &&
+                       rightForwardCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &&
+                       leftBackCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0) &&
                        rightBackCorner == System.Drawing.Color.FromArgb(255, 255, 0, 0)
                        
                     )
@@ -501,38 +536,38 @@ namespace Car_race_levan.Sprites
              * to true. 
              * We count the 
              */
-            if (car.CarRectangle.Intersects(checkpoint.StartLineCheckpointRectangle) & car.OnFifthCheckpoint == true)
+            if (car.CarRectangle.Intersects(checkpoint.StartLineCheckpointRectangle) && car.OnFifthCheckpoint == true)
             {
                 car.Round += 1;
                 car.OnCheckpoint = 0;
                 car.OnFifthCheckpoint = false;
                 car.OnStartCheckpoint = true;
             }
-            else if (car.CarRectangle.Intersects(checkpoint.FirstCheckpointRectangle) & car.OnStartCheckpoint == true)
+            else if (car.CarRectangle.Intersects(checkpoint.FirstCheckpointRectangle) && car.OnStartCheckpoint == true)
             {
                 car.OnCheckpoint += 1;
                 car.OnStartCheckpoint = false;
                 car.OnFirstCheckpoint = true;
             }
-            else if (car.CarRectangle.Intersects(checkpoint.SecondCheckpointRectangle) & car.OnFirstCheckpoint == true)
+            else if (car.CarRectangle.Intersects(checkpoint.SecondCheckpointRectangle) && car.OnFirstCheckpoint == true)
             {
                 car.OnCheckpoint += 1;
                 car.OnFirstCheckpoint = false;
                 car.OnSecondCheckpoint = true;
             }
-            else if (car.CarRectangle.Intersects(checkpoint.ThirdCheckpointRectangle) & car.OnSecondCheckpoint == true)
+            else if (car.CarRectangle.Intersects(checkpoint.ThirdCheckpointRectangle) && car.OnSecondCheckpoint == true)
             {
                 car.OnCheckpoint += 1;
                 car.OnSecondCheckpoint = false;
                 car.OnThirdCheckpoint = true;
             }
-            else if (car.CarRectangle.Intersects(checkpoint.FourthCheckpointRectangle) & car.OnThirdCheckpoint == true)
+            else if (car.CarRectangle.Intersects(checkpoint.FourthCheckpointRectangle) && car.OnThirdCheckpoint == true)
             {
                 car.OnCheckpoint += 1;
                 car.OnThirdCheckpoint = false;
                 car.OnFourthCheckpoint = true;
             }
-            else if (car.CarRectangle.Intersects(checkpoint.FifthCheckpointRectangle) & car.OnFourthCheckpoint == true)
+            else if (car.CarRectangle.Intersects(checkpoint.FifthCheckpointRectangle) && car.OnFourthCheckpoint == true)
             {
                 car.OnCheckpoint += 1;
                 car.OnFourthCheckpoint = false;

@@ -158,8 +158,8 @@ namespace Car_race_levan
             cabrio.CheckpointCounter(cabrio);
             blueCar.CheckpointCounter(blueCar);
             // Check if on track
-            cabrio.IsOnTrack(cabrio, cabrio.CarRectangle);
-            blueCar.IsOnTrack(blueCar, blueCar.CarRectangle);
+            // cabrio.IsOnTrack(cabrio, cabrio.CarRectangle);
+            // blueCar.IsOnTrack(blueCar, blueCar.CarRectangle);
 
             // Create ("Update") the cars            
             cabrio.Update(cabrio, 8, 3);
