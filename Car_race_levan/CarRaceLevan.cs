@@ -27,8 +27,8 @@ namespace Car_race_levan
         Sprites.Track testTrackred = new Sprites.Track();
 
         // Cars
-        Sprites.Car cabrio = new Sprites.Car();
-        Sprites.Car blueCar = new Sprites.Car();
+        Sprites.Car cabrio = new Sprites.Car(8);
+        Sprites.Car blueCar = new Sprites.Car(7);
 
         // Checkpoints
         Sprites.Checkpoint checkpoint = new Sprites.Checkpoint();
@@ -152,18 +152,21 @@ namespace Car_race_levan
         protected override void Update(GameTime gameTime)
         {
             // Exit if escape key will pressed 
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) { Exit(); }
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                Exit();
+            }
 
             // CheckPoints
             cabrio.CheckpointCounter(cabrio);
             blueCar.CheckpointCounter(blueCar);
             // Check if on track
-            cabrio.IsOnTrack(cabrio, cabrio.CarRectangle);
-            blueCar.IsOnTrack(blueCar, blueCar.CarRectangle);
+            //cabrio.IsOnTrack(cabrio, cabrio.CarRectangle);
+            //blueCar.IsOnTrack(blueCar, blueCar.CarRectangle);
 
             // Create ("Update") the cars            
-            cabrio.Update(cabrio, 8, 3);
-            blueCar.Update(blueCar, 7, 3);
+            cabrio.Update( 8, 3);
+            blueCar.Update( 7, 3);
 
             
             // === DEBUG ====
