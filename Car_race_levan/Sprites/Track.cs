@@ -16,6 +16,7 @@ namespace Car_race_levan.Sprites
 
         public Texture2D TrackTexture;
 
+        // empty Constructor can be deletet
         public Track()
         {
             
